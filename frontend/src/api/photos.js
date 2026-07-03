@@ -1,6 +1,7 @@
+import API_BASE from "./config";
 import { authHeader } from "./auth";
 
-const API = "/api/photos";
+const API = `${API_BASE}/api/photos`;
 
 export const getPhotos = async (page = 1, limit = 50, filters = {}) => {
   const params = new URLSearchParams({ page, limit });

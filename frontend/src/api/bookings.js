@@ -1,6 +1,7 @@
+import API_BASE from "./config";
 import { authHeader } from "./auth";
 
-const API = "/api/bookings";
+const API = `${API_BASE}/api/bookings`;
 
 export const getBookings = async (page = 1, limit = 50, status) => {
   const params = new URLSearchParams({ page, limit });
@@ -36,6 +37,20 @@ export const createBooking = async (data) => {
   return res.json();
 };
 
+export const deleteBooking = async (id) => {
+  const res = await fetch(`${API}/${id}`, {
+    method: "DELETE",
+    headers: authHeader(),
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const err = new Error("Failed to delete booking");
+    err.status = res.status;
+    throw err;
+  }
+  return res.json();
+};
+
 export const updateBooking = async (id, data) => {
   const res = await fetch(`${API}/${id}`, {
     method: "PATCH",
@@ -45,20 +60,6 @@ export const updateBooking = async (id, data) => {
   });
   if (!res.ok) {
     const err = new Error("Failed to update booking");
-    err.status = res.status;
-    throw err;
-  }
-  return res.json();
-};
-
-export const deleteBooking = async (id) => {
-  const res = await fetch(`${API}/${id}`, {
-    method: "DELETE",
-    headers: authHeader(),
-    credentials: "include",
-  });
-  if (!res.ok) {
-    const err = new Error("Failed to delete booking");
     err.status = res.status;
     throw err;
   }
