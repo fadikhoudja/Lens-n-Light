@@ -8,6 +8,7 @@ import { useToast } from "../components/Toast";
 import { CATEGORIES, CATEGORIES_WITH_AUTO } from "../constants/categories";
 import PhotoUpload from "../components/PhotoUpload";
 import ConfirmModal from "../components/ConfirmModal";
+import { imageUrl } from "../utils/imageUrl";
 
 function Admin() {
   const { t } = useLanguage();
@@ -319,7 +320,7 @@ function Admin() {
                   onChange={() => toggleSelect(p._id)}
                   className="admin-check"
                 />
-                <img src={`/uploads/${p.image}`} alt={p.title} loading="lazy" className="w-12 h-12 object-cover rounded-lg shrink-0 ring-1 ring-white/5" />
+                <img src={imageUrl(p)} alt={p.title} loading="lazy" className="w-12 h-12 object-cover rounded-lg shrink-0 ring-1 ring-white/5" />
                 {editingId === p._id ? (
                   <div className="flex-1 min-w-0 flex flex-col sm:flex-row gap-2">
                     <input

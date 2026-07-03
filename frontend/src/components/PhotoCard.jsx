@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { imageUrl } from "../utils/imageUrl";
 
 function PhotoCard({ photo, index = 0 }) {
   const [imgError, setImgError] = useState(false);
@@ -17,7 +18,7 @@ function PhotoCard({ photo, index = 0 }) {
         </div>
       ) : (
         <img
-          src={`/uploads/${photo.image}`}
+          src={imageUrl(photo)}
           alt={photo.title}
           loading="lazy"
           onError={() => setImgError(true)}

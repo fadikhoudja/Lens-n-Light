@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from "react";
+import { imageUrl } from "../utils/imageUrl";
 
 function Lightbox({ photo, photos = [], onClose }) {
   const currentIndex = photos.findIndex((p) => p._id === photo._id);
@@ -60,7 +61,7 @@ function Lightbox({ photo, photos = [], onClose }) {
       )}
 
       <img
-        src={`/uploads/${photo.image}`}
+        src={imageUrl(photo)}
         alt={photo.title}
         className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
         onClick={(e) => e.stopPropagation()}

@@ -1,4 +1,3 @@
-const fs = require("fs");
 const sharp = require("sharp");
 const { CATEGORIES } = require("../constants/categories");
 
@@ -15,12 +14,12 @@ const KEYWORDS = {
   Product: ["product", "object", "bottle", "electronics", "furniture", "packaging"],
 };
 
-async function categorizeImage(imagePath) {
+async function categorizeImage(imageBuffer) {
   const apiKey = process.env.HUGGINGFACE_API_KEY;
   if (!apiKey) return "Uncategorized";
 
   try {
-    const resized = await sharp(imagePath)
+    const resized = await sharp(imageBuffer)
       .resize({ width: 512, withoutEnlargement: true })
       .jpeg({ quality: 70 })
       .toBuffer();

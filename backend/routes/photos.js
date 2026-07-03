@@ -8,21 +8,13 @@ const sharp = require("sharp");
 const Photo = require("../models/Photo");
 const auth = require("../middleware/auth");
 const { categorizeImage } = require("../services/ai");
-const { resizeImage } = require("../services/resize");
+const { resizeBuffer } = require("../services/resize");
+const { uploadBuffer, destroyImage } = require("../config/cloudinary");
 
 const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp", "image/avif", "image/tiff"];
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const safeExt = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".tiff", ".tif"].includes(ext) ? ext : ".jpg";
-    cb(null, crypto.randomUUID() + safeExt);
-  },
-});
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (ALLOWED_MIMES.includes(file.mimetype)) {
@@ -61,16 +53,15 @@ router.post("/", auth, upload.array("images", 20), async (req, res) => {
     const overrideCategory = req.body.category;
 
     for (const file of req.files) {
-      const filePath = path.join(__dirname, "..", "uploads", file.filename);
-
       try {
-        await sharp(filePath).metadata();
+        await sharp(file.buffer).metadata();
       } catch {
-        fs.unlink(filePath, () => {});
-        return res.status(400).json({ error: `Invalid image file: ${file.filename}` });
+        return res.status(400).json({ error: `Invalid image file: ${file.originalname}` });
       }
 
-      await resizeImage(filePath);
+      const resized = await resizeBuffer(file.buffer);
+
+      const cloudResult = await uploadBuffer(resized);
 
       const title = sanitize(
         file.originalname.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ")
@@ -80,10 +71,15 @@ router.post("/", auth, upload.array("images", 20), async (req, res) => {
       if (overrideCategory && overrideCategory !== "Auto") {
         category = overrideCategory;
       } else {
-        category = await categorizeImage(filePath);
+        category = await categorizeImage(resized);
       }
 
-      const photo = await Photo.create({ title, image: file.filename, category });
+      const photo = await Photo.create({
+        title,
+        image: cloudResult.secure_url,
+        public_id: cloudResult.public_id,
+        category,
+      });
       results.push(photo);
     }
 
@@ -112,10 +108,14 @@ router.delete("/:id", auth, async (req, res) => {
     const photo = await Photo.findById(req.params.id);
     if (!photo) return res.status(404).json({ error: "Photo not found" });
 
-    const filePath = path.join(__dirname, "..", "uploads", photo.image);
-    fs.unlink(filePath, (err) => {
-      if (err) console.error("Failed to delete file:", filePath, err.message);
-    });
+    if (photo.public_id) {
+      destroyImage(photo.public_id).catch((err) => console.error("Cloudinary delete failed:", err.message));
+    } else {
+      const filePath = path.join(__dirname, "..", "uploads", photo.image);
+      fs.unlink(filePath, (err) => {
+        if (err && err.code !== "ENOENT") console.error("Failed to delete file:", filePath, err.message);
+      });
+    }
 
     await Photo.findByIdAndDelete(req.params.id);
     res.json({ message: "Photo deleted" });
@@ -145,10 +145,14 @@ router.delete("/bulk/delete", auth, async (req, res) => {
     }
     const photos = await Photo.find({ _id: { $in: ids } });
     for (const photo of photos) {
-      const filePath = path.join(__dirname, "..", "uploads", photo.image);
-      fs.unlink(filePath, (err) => {
-        if (err) console.error("Failed to delete file:", filePath, err.message);
-      });
+      if (photo.public_id) {
+        destroyImage(photo.public_id).catch((err) => console.error("Cloudinary delete failed:", err.message));
+      } else {
+        const filePath = path.join(__dirname, "..", "uploads", photo.image);
+        fs.unlink(filePath, (err) => {
+          if (err && err.code !== "ENOENT") console.error("Failed to delete file:", filePath, err.message);
+        });
+      }
     }
     await Photo.deleteMany({ _id: { $in: ids } });
     res.json({ message: `${photos.length} photos deleted` });
