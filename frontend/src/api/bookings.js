@@ -2,8 +2,10 @@ import { authHeader } from "./auth";
 
 const API = "/api/bookings";
 
-export const getBookings = async (page = 1, limit = 50) => {
-  const res = await fetch(`${API}?page=${page}&limit=${limit}`, {
+export const getBookings = async (page = 1, limit = 50, status) => {
+  const params = new URLSearchParams({ page, limit });
+  if (status) params.set("status", status);
+  const res = await fetch(`${API}?${params}`, {
     headers: authHeader(),
     credentials: "include",
   });
@@ -15,6 +17,15 @@ export const getBookings = async (page = 1, limit = 50) => {
   return res.json();
 };
 
+export const getBooking = async (id) => {
+  const res = await fetch(`${API}/${id}`, {
+    headers: authHeader(),
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch booking");
+  return res.json();
+};
+
 export const createBooking = async (data) => {
   const res = await fetch(API, {
     method: "POST",
@@ -22,6 +33,21 @@ export const createBooking = async (data) => {
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Failed to create booking");
+  return res.json();
+};
+
+export const updateBooking = async (id, data) => {
+  const res = await fetch(`${API}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...authHeader() },
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const err = new Error("Failed to update booking");
+    err.status = res.status;
+    throw err;
+  }
   return res.json();
 };
 

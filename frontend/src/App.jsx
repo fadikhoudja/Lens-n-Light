@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { LanguageProvider } from "./i18n/LanguageContext";
 import { ToastProvider } from "./components/Toast";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -17,6 +18,12 @@ function PageSkeleton() {
       <div className="w-10 h-10 border-2 border-zinc-600 border-t-amber-400 rounded-full animate-spin" />
     </div>
   );
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
 }
 
 function PageLayout({ children }) {
@@ -51,6 +58,7 @@ function App() {
       <ToastProvider>
       <LanguageProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <div className="min-h-screen bg-zinc-900 text-white">
             <Suspense fallback={<PageSkeleton />}>
               <Routes>

@@ -15,11 +15,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
+const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 
 const app = express();
 
+app.use(compression());
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173", credentials: true }));
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
@@ -34,7 +36,10 @@ const authLimiter = rateLimit({
 
 app.use("/api/auth/login", authLimiter);
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
+  maxAge: "30d",
+  immutable: true,
+}));
 
 const authRoutes = require("./routes/auth");
 const photoRoutes = require("./routes/photos");

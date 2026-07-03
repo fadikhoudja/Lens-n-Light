@@ -105,3 +105,6 @@ input[type="checkbox"].admin-check:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
 }
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

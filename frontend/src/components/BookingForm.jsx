@@ -107,7 +107,7 @@ function BookingForm() {
         {submitting ? (
           <span className="flex items-center justify-center gap-2">
             <span className="w-4 h-4 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin" />
-            Sending...
+            {t("booking.sending")}
           </span>
         ) : (
           t("booking.submit")

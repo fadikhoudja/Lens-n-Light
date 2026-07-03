@@ -1,4 +1,5 @@
 const fs = require("fs");
+const sharp = require("sharp");
 const { CATEGORIES } = require("../constants/categories");
 
 const KEYWORDS = {
@@ -19,12 +20,12 @@ async function categorizeImage(imagePath) {
   if (!apiKey) return "Uncategorized";
 
   try {
-    const imageBuffer = fs.readFileSync(imagePath);
-    const base64 = imageBuffer.toString("base64");
+    const resized = await sharp(imagePath)
+      .resize({ width: 512, withoutEnlargement: true })
+      .jpeg({ quality: 70 })
+      .toBuffer();
 
-    if (base64.length > 5_000_000) {
-      return "Uncategorized";
-    }
+    const base64 = resized.toString("base64");
 
     const response = await fetch(
       "https://router.huggingface.co/hf-inference/models/google/vit-base-patch16-224",

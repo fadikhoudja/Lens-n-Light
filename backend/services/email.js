@@ -1,5 +1,9 @@
 const nodemailer = require("nodemailer");
 
+function esc(str) {
+  return String(str).replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]));
+}
+
 function getTransporter() {
   if (!process.env.SMTP_HOST) return null;
   return nodemailer.createTransport({
@@ -31,10 +35,11 @@ async function notifyNewBooking(booking) {
       subject: "New Booking Request",
       html: `
         <h2>New Booking Request</h2>
-        <p><strong>Name:</strong> ${booking.name}</p>
-        <p><strong>Phone:</strong> ${booking.phone}</p>
-        <p><strong>Date:</strong> ${booking.date}</p>
-        <p><strong>Message:</strong> ${booking.message || "—"}</p>
+        <p><strong>Name:</strong> ${esc(booking.name)}</p>
+        <p><strong>Phone:</strong> ${esc(booking.phone)}</p>
+        <p><strong>Date:</strong> ${esc(booking.date)}</p>
+        <p><strong>Status:</strong> ${esc(booking.status || "pending")}</p>
+        <p><strong>Message:</strong> ${esc(booking.message || "—")}</p>
       `,
     });
     console.log("Email sent successfully:", info.messageId);

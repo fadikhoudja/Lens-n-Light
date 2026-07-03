@@ -4,6 +4,8 @@ import { useToast } from "./Toast";
 import { authHeader } from "../api/auth";
 import { CATEGORIES_WITH_AUTO } from "../constants/categories";
 
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
 function PhotoUpload({ onUpload }) {
   const { t } = useLanguage();
   const { addToast } = useToast();
@@ -13,14 +15,36 @@ function PhotoUpload({ onUpload }) {
   const [category, setCategory] = useState("Auto");
   const inputRef = useRef(null);
 
+  const validateFiles = (fileList) => {
+    const arr = Array.from(fileList);
+    for (const f of arr) {
+      if (!f.type.startsWith("image/")) {
+        addToast(`${f.name} is not an image`, "error");
+        return false;
+      }
+      if (f.size > MAX_FILE_SIZE) {
+        addToast(`${f.name} exceeds 20MB limit`, "error");
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSelect = (e) => {
+    if (!validateFiles(e.target.files)) return;
     setFiles(Array.from(e.target.files));
     setProgress(0);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setFiles(Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith("image/")));
+    const fileList = Array.from(e.dataTransfer.files);
+    const images = fileList.filter((f) => f.type.startsWith("image/") && f.size <= MAX_FILE_SIZE);
+    const rejected = fileList.filter((f) => !f.type.startsWith("image/") || f.size > MAX_FILE_SIZE);
+    for (const r of rejected) {
+      addToast(`${r.name}: ${r.size > MAX_FILE_SIZE ? "exceeds 20MB" : "not an image"}`, "error");
+    }
+    setFiles(images);
     setProgress(0);
   };
 
@@ -110,8 +134,11 @@ function PhotoUpload({ onUpload }) {
           </div>
           <div className="flex flex-wrap gap-2 mb-4">
             {files.map((f, i) => (
-              <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-zinc-700">
+              <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-zinc-700 group">
                 <img src={URL.createObjectURL(f)} alt="" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] text-zinc-300 px-1 text-center leading-tight">
+                  {f.name.length > 20 ? f.name.slice(0, 18) + "…" : f.name}
+                </div>
               </div>
             ))}
           </div>
@@ -119,7 +146,7 @@ function PhotoUpload({ onUpload }) {
           {uploading && (
             <div className="mb-4">
               <div className="flex items-center justify-between text-xs text-zinc-400 mb-1.5">
-                <span>Uploading...</span>
+                <span>{t("admin.uploading")}</span>
                 <span>{progress}%</span>
               </div>
               <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
@@ -140,10 +167,10 @@ function PhotoUpload({ onUpload }) {
               {uploading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="w-4 h-4 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin" />
-                  Uploading...
+                  {t("admin.uploading")}
                 </span>
               ) : (
-                `Upload ${files.length} file${files.length > 1 ? "s" : ""}`
+                `${t("admin.upload")} ${files.length} file${files.length > 1 ? "s" : ""}`
               )}
             </button>
             <button

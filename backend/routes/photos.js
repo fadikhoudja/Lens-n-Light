@@ -3,6 +3,8 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
+const sharp = require("sharp");
 const Photo = require("../models/Photo");
 const auth = require("../middleware/auth");
 const { categorizeImage } = require("../services/ai");
@@ -12,7 +14,11 @@ const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp", "image/avif", "i
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_")),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const safeExt = [".jpg", ".jpeg", ".png", ".webp", ".avif", ".tiff", ".tif"].includes(ext) ? ext : ".jpg";
+    cb(null, crypto.randomUUID() + safeExt);
+  },
 });
 
 const upload = multer({
@@ -36,9 +42,12 @@ router.get("/", async (req, res) => {
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
     const skip = (page - 1) * limit;
+    const filter = {};
+    if (req.query.category) filter.category = req.query.category;
+    if (req.query.search) filter.title = { $regex: req.query.search, $options: "i" };
     const [photos, total] = await Promise.all([
-      Photo.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
-      Photo.countDocuments(),
+      Photo.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Photo.countDocuments(filter),
     ]);
     res.json({ photos, total, page, pages: Math.ceil(total / limit) });
   } catch (err) {
@@ -53,6 +62,14 @@ router.post("/", auth, upload.array("images", 20), async (req, res) => {
 
     for (const file of req.files) {
       const filePath = path.join(__dirname, "..", "uploads", file.filename);
+
+      try {
+        await sharp(filePath).metadata();
+      } catch {
+        fs.unlink(filePath, () => {});
+        return res.status(400).json({ error: `Invalid image file: ${file.filename}` });
+      }
+
       await resizeImage(filePath);
 
       const title = sanitize(
@@ -73,6 +90,20 @@ router.post("/", auth, upload.array("images", 20), async (req, res) => {
     res.status(201).json(results);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+router.patch("/:id", auth, async (req, res) => {
+  try {
+    const { title, category } = req.body;
+    const update = {};
+    if (title !== undefined) update.title = sanitize(title);
+    if (category !== undefined) update.category = category;
+    const photo = await Photo.findByIdAndUpdate(req.params.id, update, { new: true });
+    if (!photo) return res.status(404).json({ error: "Photo not found" });
+    res.json(photo);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -17,28 +17,30 @@ function Navbar() {
       pathname === path ? "text-white" : "text-zinc-400 hover:text-white"
     }`;
 
+  const closeMenu = () => setMenuOpen(false);
+
   const links = (
     <>
-      <Link to="/" className={linkClass("/")} onClick={() => setMenuOpen(false)}>
+      <Link to="/" className={linkClass("/")} onClick={closeMenu}>
         {t("nav.gallery")}
       </Link>
-      <Link to="/book" className={linkClass("/book")} onClick={() => setMenuOpen(false)}>
+      <Link to="/book" className={linkClass("/book")} onClick={closeMenu}>
         {t("nav.book")}
       </Link>
       {authed ? (
         <>
-          <Link to="/admin" className={linkClass("/admin")} onClick={() => setMenuOpen(false)}>
+          <Link to="/admin" className={linkClass("/admin")} onClick={closeMenu}>
             {t("nav.admin")}
           </Link>
           <button
-            onClick={() => { logout(); navigate("/"); setMenuOpen(false); }}
+            onClick={() => { logout(); navigate("/"); closeMenu(); }}
             className="text-sm text-zinc-400 hover:text-amber-400 transition-colors cursor-pointer bg-transparent font-normal p-0"
           >
             {t("nav.logout")}
           </button>
         </>
       ) : (
-        <Link to="/admin/login" className="text-sm text-zinc-500 hover:text-amber-400 transition-colors" onClick={() => setMenuOpen(false)}>
+        <Link to="/admin/login" className="text-sm text-zinc-500 hover:text-amber-400 transition-colors" onClick={closeMenu}>
           {t("nav.adminLogin")}
         </Link>
       )}
@@ -78,8 +80,14 @@ function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 flex flex-col gap-3 md:hidden animate-fade-in">
-          {links}
+        <div className="fixed inset-0 z-30 md:hidden" onClick={closeMenu}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div
+            className="absolute top-full left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 flex flex-col gap-3 animate-fade-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {links}
+          </div>
         </div>
       )}
     </nav>

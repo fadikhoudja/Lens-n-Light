@@ -1,6 +1,5 @@
 import { useLanguage } from "../i18n/LanguageContext";
 
-const flags = { en: "🇬🇧", fr: "🇫🇷", ar: "🇸🇦" };
 const labels = { en: "EN", fr: "FR", ar: "AR" };
 
 function LanguageSwitcher() {
@@ -19,7 +18,6 @@ function LanguageSwitcher() {
               : "text-zinc-500 hover:text-zinc-300 bg-transparent"
           }`}
         >
-          <span className="me-1">{flags[l]}</span>
           {labels[l]}
         </button>
       ))}
