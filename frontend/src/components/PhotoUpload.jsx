@@ -1,42 +1,69 @@
 import { useState, useRef } from "react";
-import { uploadPhotos } from "../api/photos";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useToast } from "./Toast";
+import { authHeader } from "../api/auth";
 import { CATEGORIES_WITH_AUTO } from "../constants/categories";
 
 function PhotoUpload({ onUpload }) {
   const { t } = useLanguage();
+  const { addToast } = useToast();
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [done, setDone] = useState(false);
-  const [error, setError] = useState("");
+  const [progress, setProgress] = useState(0);
   const [category, setCategory] = useState("Auto");
   const inputRef = useRef(null);
 
   const handleSelect = (e) => {
     setFiles(Array.from(e.target.files));
-    setDone(false);
-    setError("");
+    setProgress(0);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     setFiles(Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith("image/")));
-    setDone(false);
-    setError("");
+    setProgress(0);
   };
 
   const handleUpload = async () => {
     if (files.length === 0) return;
     setUploading(true);
-    setError("");
+    setProgress(0);
+
+    const fd = new FormData();
+    for (const file of files) {
+      fd.append("images", file);
+    }
+    if (category) fd.append("category", category);
+
     try {
-      await uploadPhotos(files, category);
-      setDone(true);
+      const xhr = new XMLHttpRequest();
+      await new Promise((resolve, reject) => {
+        xhr.upload.addEventListener("progress", (e) => {
+          if (e.lengthComputable) {
+            setProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        });
+        xhr.addEventListener("load", () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve();
+          else reject(new Error("Upload failed"));
+        });
+        xhr.addEventListener("error", () => reject(new Error("Upload failed")));
+        xhr.open("POST", "/api/photos");
+        const headers = authHeader();
+        for (const [k, v] of Object.entries(headers)) {
+          xhr.setRequestHeader(k, v);
+        }
+        xhr.withCredentials = true;
+        xhr.send(fd);
+      });
+
+      addToast(`${files.length} photo${files.length > 1 ? "s" : ""} uploaded`, "success");
       setFiles([]);
+      setProgress(0);
       if (inputRef.current) inputRef.current.value = "";
       onUpload();
-    } catch (err) {
-      setError(err.message || "Upload failed");
+    } catch {
+      addToast("Upload failed", "error");
     } finally {
       setUploading(false);
     }
@@ -88,6 +115,22 @@ function PhotoUpload({ onUpload }) {
               </div>
             ))}
           </div>
+
+          {uploading && (
+            <div className="mb-4">
+              <div className="flex items-center justify-between text-xs text-zinc-400 mb-1.5">
+                <span>Uploading...</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-2">
             <button
               onClick={handleUpload}
@@ -104,7 +147,7 @@ function PhotoUpload({ onUpload }) {
               )}
             </button>
             <button
-              onClick={() => { setFiles([]); if (inputRef.current) inputRef.current.value = ""; }}
+              onClick={() => { setFiles([]); setProgress(0); if (inputRef.current) inputRef.current.value = ""; }}
               disabled={uploading}
               className="px-4 py-2.5 rounded-lg border border-zinc-700 text-zinc-400 text-sm cursor-pointer hover:text-white hover:border-zinc-500 transition-colors bg-transparent disabled:opacity-40"
             >
@@ -112,13 +155,6 @@ function PhotoUpload({ onUpload }) {
             </button>
           </div>
         </div>
-      )}
-
-      {done && (
-        <p className="text-emerald-400 text-sm mt-3 text-center">{t("admin.uploadSuccess")}</p>
-      )}
-      {error && (
-        <p className="text-red-400 text-sm mt-3 text-center">{error}</p>
       )}
     </div>
   );

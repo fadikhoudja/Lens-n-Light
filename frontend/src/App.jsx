@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { LanguageProvider } from "./i18n/LanguageContext";
+import { ToastProvider } from "./components/Toast";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -47,6 +48,7 @@ function NotFound() {
 function App() {
   return (
     <ErrorBoundary>
+      <ToastProvider>
       <LanguageProvider>
         <BrowserRouter>
           <div className="min-h-screen bg-zinc-900 text-white">
@@ -82,6 +84,7 @@ function App() {
           </div>
         </BrowserRouter>
       </LanguageProvider>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }

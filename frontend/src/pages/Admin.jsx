@@ -4,17 +4,24 @@ import { getPhotos, deletePhoto, bulkCategorize, bulkDeletePhotos } from "../api
 import { getBookings, deleteBooking } from "../api/bookings";
 import { isAuthenticated, logout } from "../api/auth";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useToast } from "../components/Toast";
 import { CATEGORIES } from "../constants/categories";
 import PhotoUpload from "../components/PhotoUpload";
 
 function Admin() {
   const { t } = useLanguage();
+  const { addToast } = useToast();
   const [activeTab, setActiveTab] = useState("photos");
   const [photos, setPhotos] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [error, setError] = useState("");
   const [selected, setSelected] = useState([]);
   const [bulkCategory, setBulkCategory] = useState("Portrait");
+  const [photoPage, setPhotoPage] = useState(1);
+  const [photoTotal, setPhotoTotal] = useState(0);
+  const [photoPages, setPhotoPages] = useState(0);
+  const [bookingPage, setBookingPage] = useState(1);
+  const [bookingTotal, setBookingTotal] = useState(0);
+  const [bookingPages, setBookingPages] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +29,7 @@ function Admin() {
   }, [navigate]);
 
   const checkAuth = (err) => {
-    if (err?.message?.includes("401") || err?.message?.includes("403") || err?.status === 401 || err?.status === 403) {
+    if (err?.status === 401 || err?.status === 403) {
       logout();
       navigate("/admin/login");
       return true;
@@ -30,20 +37,36 @@ function Admin() {
     return false;
   };
 
-  const fetchPhotos = async () => {
+  const fetchPhotos = async (page) => {
     try {
-      const data = await getPhotos();
-      setPhotos(data.photos || data);
+      const p = page || photoPage;
+      const data = await getPhotos(p);
+      if (data.photos) {
+        setPhotos(data.photos);
+        setPhotoTotal(data.total);
+        setPhotoPages(data.pages);
+        setPhotoPage(data.page);
+      } else {
+        setPhotos(data);
+      }
     } catch (err) {
-      if (!checkAuth(err)) setError("Failed to load photos");
+      if (!checkAuth(err)) addToast("Failed to load photos", "error");
     }
   };
-  const fetchBookings = async () => {
+  const fetchBookings = async (page) => {
     try {
-      const data = await getBookings();
-      setBookings(data.bookings || data);
+      const p = page || bookingPage;
+      const data = await getBookings(p);
+      if (data.bookings) {
+        setBookings(data.bookings);
+        setBookingTotal(data.total);
+        setBookingPages(data.pages);
+        setBookingPage(data.page);
+      } else {
+        setBookings(data);
+      }
     } catch (err) {
-      if (!checkAuth(err)) setError("Failed to load bookings");
+      if (!checkAuth(err)) addToast("Failed to load bookings", "error");
     }
   };
 
@@ -53,10 +76,10 @@ function Admin() {
     if (!window.confirm("Delete this photo?")) return;
     try {
       await deletePhoto(id);
-      setError("");
+      addToast("Photo deleted", "success");
       fetchPhotos();
-    } catch {
-      setError("Failed to delete photo");
+    } catch (err) {
+      if (!checkAuth(err)) addToast("Failed to delete photo", "error");
     }
   };
 
@@ -76,11 +99,11 @@ function Admin() {
     if (selected.length === 0) return;
     try {
       await bulkCategorize(selected, bulkCategory);
-      setError("");
+      addToast(`${selected.length} photos categorized`, "success");
       setSelected([]);
       fetchPhotos();
-    } catch {
-      setError("Failed to update categories");
+    } catch (err) {
+      if (!checkAuth(err)) addToast("Failed to update categories", "error");
     }
   };
 
@@ -88,21 +111,21 @@ function Admin() {
     if (selected.length === 0 || !window.confirm(`Delete ${selected.length} photos?`)) return;
     try {
       await bulkDeletePhotos(selected);
-      setError("");
+      addToast(`${selected.length} photos deleted`, "success");
       setSelected([]);
       fetchPhotos();
-    } catch {
-      setError("Failed to delete photos");
+    } catch (err) {
+      if (!checkAuth(err)) addToast("Failed to delete photos", "error");
     }
   };
   const handleDeleteBooking = async (id) => {
     if (!window.confirm("Delete this booking?")) return;
     try {
       await deleteBooking(id);
-      setError("");
+      addToast("Booking deleted", "success");
       fetchBookings();
-    } catch {
-      setError("Failed to delete booking");
+    } catch (err) {
+      if (!checkAuth(err)) addToast("Failed to delete booking", "error");
     }
   };
 
@@ -137,9 +160,6 @@ function Admin() {
         </button>
       </div>
 
-      {error && (
-        <p className="text-red-400 text-sm mb-4 text-center">{error}</p>
-      )}
       {activeTab === "photos" && (
         <div>
           <PhotoUpload onUpload={fetchPhotos} />
@@ -215,6 +235,40 @@ function Admin() {
             ))}
             {photos.length === 0 && <p className="text-center py-12 text-zinc-500">{t("admin.noPhotos")}</p>}
           </div>
+          {photoPages > 1 && (
+            <div className="flex items-center justify-between mt-4 text-sm">
+              <span className="text-zinc-500">{photoTotal} total</span>
+              <div className="flex gap-1">
+                <button
+                  disabled={photoPage <= 1}
+                  onClick={() => fetchPhotos(photoPage - 1)}
+                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: photoPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => fetchPhotos(p)}
+                    className={`px-3 py-1.5 rounded-lg border text-xs cursor-pointer transition-all ${
+                      p === photoPage
+                        ? "bg-amber-500 text-zinc-900 border-amber-500 font-medium"
+                        : "border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 bg-transparent"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  disabled={photoPage >= photoPages}
+                  onClick={() => fetchPhotos(photoPage + 1)}
+                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -237,6 +291,40 @@ function Admin() {
               </button>
             </div>
           ))}
+          {bookingPages > 1 && (
+            <div className="flex items-center justify-between mt-4 text-sm">
+              <span className="text-zinc-500">{bookingTotal} total</span>
+              <div className="flex gap-1">
+                <button
+                  disabled={bookingPage <= 1}
+                  onClick={() => fetchBookings(bookingPage - 1)}
+                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: bookingPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => fetchBookings(p)}
+                    className={`px-3 py-1.5 rounded-lg border text-xs cursor-pointer transition-all ${
+                      p === bookingPage
+                        ? "bg-amber-500 text-zinc-900 border-amber-500 font-medium"
+                        : "border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 bg-transparent"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  disabled={bookingPage >= bookingPages}
+                  onClick={() => fetchBookings(bookingPage + 1)}
+                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

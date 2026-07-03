@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { createBooking } from "../api/bookings";
 import { useLanguage } from "../i18n/LanguageContext";
+import { useToast } from "./Toast";
 
 function BookingForm() {
   const { t } = useLanguage();
+  const { addToast } = useToast();
   const [form, setForm] = useState({ name: "", phone: "", date: "", message: "" });
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setSubmitting(true);
     try {
       await createBooking(form);
       setSent(true);
       setForm({ name: "", phone: "", date: "", message: "" });
     } catch (err) {
-      setError(err.message || "Failed to send request");
+      addToast(err.message || "Failed to send request", "error");
     } finally {
       setSubmitting(false);
     }
@@ -99,9 +99,6 @@ function BookingForm() {
           className="w-full form-input bg-zinc-900/80 border border-zinc-700 rounded-xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all resize-y placeholder-zinc-500"
         />
       </div>
-      {error && (
-        <p className="text-red-400 text-sm text-center">{error}</p>
-      )}
       <button
         type="submit"
         disabled={submitting}

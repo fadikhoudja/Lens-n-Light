@@ -128,9 +128,9 @@ function Gallery() {
               <p className="text-zinc-600 text-sm mt-1">{t("gallery.emptySub")}</p>
             </div>
           ) : (
-            <div className="photo-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="photo-grid columns-1 sm:columns-2 lg:columns-3 gap-6 [column-fill:_balance]">
               {filtered.map((photo, i) => (
-                <div key={photo._id} onClick={() => setLightboxPhoto(photo)}>
+                <div key={photo._id} onClick={() => setLightboxPhoto(photo)} className="break-inside-avoid mb-6">
                   <PhotoCard photo={photo} index={i} />
                 </div>
               ))}
