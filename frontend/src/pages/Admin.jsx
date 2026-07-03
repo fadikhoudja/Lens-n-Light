@@ -228,7 +228,7 @@ function Admin() {
                     p.category === "Uncategorized" ? "text-zinc-600" : "text-amber-400/70"
                   }`}>{p.category}</span>
                 </div>
-                <button onClick={() => handleDeletePhoto(p._id)} className="opacity-0 group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all shrink-0">
+                <button onClick={() => handleDeletePhoto(p._id)} className="md:opacity-0 md:group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all shrink-0">
                   {t("admin.delete")}
                 </button>
               </div>
