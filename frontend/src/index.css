@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-dark-900: #0d0d0d;
+  --color-dark-800: #1a1a1a;
+  --color-dark-700: #2a2a2a;
+  --color-dark-600: #333333;
+  --color-dark-400: #666666;
+  --color-dark-200: #aaaaaa;
+  --color-dark-100: #e0e0e0;
+  --color-accent: #f59e0b;
+  --color-accent-light: #fbbf24;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out both;
+}
+
+.delay-1  { animation-delay: 0.1s; }
+.delay-2  { animation-delay: 0.2s; }
+.delay-3  { animation-delay: 0.3s; }
+.delay-4  { animation-delay: 0.4s; }
+.delay-5  { animation-delay: 0.5s; }
+.delay-6  { animation-delay: 0.6s; }
+.delay-7  { animation-delay: 0.7s; }
+.delay-8  { animation-delay: 0.8s; }
+.delay-9  { animation-delay: 0.9s; }
+.delay-10 { animation-delay: 1.0s; }
+
+/* RTL overrides for input icons */
+[dir="rtl"] .form-icon {
+  left: auto !important;
+  right: 1rem !important;
+}
+[dir="rtl"] .form-input {
+  padding-left: 1rem !important;
+  padding-right: 3rem !important;
+}
+
+[dir="rtl"] .end-3 {
+  left: 0.75rem;
+  right: auto;
+}
+
+[dir="rtl"] .me-1 {
+  margin-left: 0.25rem;
+  margin-right: 0;
+}
+
+/* Custom checkbox */
+input[type="checkbox"].admin-check {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1.5px solid rgba(113, 113, 122, 0.5);
+  border-radius: 0.375rem;
+  background: rgba(24, 24, 27, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"].admin-check:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(24, 24, 27, 0.95);
+}
+
+input[type="checkbox"].admin-check:checked {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-color: #f59e0b;
+}
+
+input[type="checkbox"].admin-check:checked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='%230d0d0d' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E") center/80% no-repeat;
+}
+
+input[type="checkbox"].admin-check:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
