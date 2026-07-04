@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useLanguage } from "../i18n/LanguageContext";
 import { useToast } from "./Toast";
 import { authHeader } from "../api/auth";
+import API_BASE from "../api/config";
 import { CATEGORIES_WITH_AUTO } from "../constants/categories";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
@@ -72,7 +73,7 @@ function PhotoUpload({ onUpload }) {
           else reject(new Error("Upload failed"));
         });
         xhr.addEventListener("error", () => reject(new Error("Upload failed")));
-        xhr.open("POST", "/api/photos");
+        xhr.open("POST", `${API_BASE}/api/photos`);
         const headers = authHeader();
         for (const [k, v] of Object.entries(headers)) {
           xhr.setRequestHeader(k, v);

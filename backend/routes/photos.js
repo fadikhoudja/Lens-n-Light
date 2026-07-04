@@ -3,8 +3,6 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const crypto = require("crypto");
-const sharp = require("sharp");
 const Photo = require("../models/Photo");
 const auth = require("../middleware/auth");
 const { categorizeImage } = require("../services/ai");
@@ -53,12 +51,6 @@ router.post("/", auth, upload.array("images", 20), async (req, res) => {
     const overrideCategory = req.body.category;
 
     for (const file of req.files) {
-      try {
-        await sharp(file.buffer).metadata();
-      } catch {
-        return res.status(400).json({ error: `Invalid image file: ${file.originalname}` });
-      }
-
       const resized = await resizeBuffer(file.buffer);
 
       const cloudResult = await uploadBuffer(resized);
