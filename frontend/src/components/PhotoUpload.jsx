@@ -82,13 +82,13 @@ function PhotoUpload({ onUpload }) {
         xhr.send(fd);
       });
 
-      addToast(`${files.length} photo${files.length > 1 ? "s" : ""} uploaded`, "success");
+      addToast(t(files.length === 1 ? "admin.photoUploaded" : "admin.photosUploaded").replace("{count}", files.length), "success");
       setFiles([]);
       setProgress(0);
       if (inputRef.current) inputRef.current.value = "";
       onUpload();
     } catch {
-      addToast("Upload failed", "error");
+      addToast(t("admin.uploadFailed"), "error");
     } finally {
       setUploading(false);
     }
@@ -122,7 +122,7 @@ function PhotoUpload({ onUpload }) {
       {files.length > 0 && (
         <div className="mt-4">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-zinc-400">{files.length} file{files.length > 1 ? "s" : ""} selected</span>
+            <span className="text-sm text-zinc-400">{t(files.length === 1 ? "admin.fileSelected" : "admin.filesSelected").replace("{count}", files.length)}</span>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -171,7 +171,7 @@ function PhotoUpload({ onUpload }) {
                   {t("admin.uploading")}
                 </span>
               ) : (
-                `${t("admin.upload")} ${files.length} file${files.length > 1 ? "s" : ""}`
+                t(files.length === 1 ? "admin.uploadFile" : "admin.uploadFiles").replace("{count}", files.length)
               )}
             </button>
             <button

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -132,8 +133,6 @@ router.delete("/:id", auth, async (req, res) => {
     console.error(err); res.status(500).json({ error: "Internal server error" });
   }
 });
-
-const mongoose = require("mongoose");
 
 function validateObjectIds(ids) {
   return Array.isArray(ids) && ids.length > 0 && ids.length <= 100 && ids.every((id) => mongoose.Types.ObjectId.isValid(id));

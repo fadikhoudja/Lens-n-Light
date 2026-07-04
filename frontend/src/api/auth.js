@@ -7,7 +7,6 @@ export const login = async (username, password) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
-    credentials: "include",
   });
   if (!res.ok) throw new Error("Invalid credentials");
   const data = await res.json();
@@ -17,7 +16,7 @@ export const login = async (username, password) => {
 
 export const logout = async () => {
   try {
-    await fetch(`${API}/logout`, { method: "POST", credentials: "include" });
+    await fetch(`${API}/logout`, { method: "POST" });
   } catch {
   }
   localStorage.removeItem("photography_admin_token");

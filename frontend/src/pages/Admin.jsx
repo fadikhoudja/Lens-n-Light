@@ -63,7 +63,7 @@ function Admin() {
         setPhotos(data);
       }
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to load photos", "error");
+      if (!checkAuth(err)) addToast(t("admin.loadPhotosFailed"), "error");
     }
   }, [photoPage, search, categoryFilter, addToast]);
 
@@ -80,7 +80,7 @@ function Admin() {
         setBookings(data);
       }
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to load bookings", "error");
+      if (!checkAuth(err)) addToast(t("admin.loadBookingsFailed"), "error");
     }
   }, [bookingPage, statusFilter, addToast]);
 
@@ -174,11 +174,11 @@ function Admin() {
   const confirmDeleteBooking = async () => {
     try {
       await deleteBooking(confirmDelete.id);
-      addToast("Booking deleted", "success");
+      addToast(t("admin.bookingDeleted"), "success");
       setConfirmDelete(null);
       fetchBookings();
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to delete booking", "error");
+      if (!checkAuth(err)) addToast(t("admin.deleteBookingFailed"), "error");
       setConfirmDelete(null);
     }
   };
@@ -186,13 +186,13 @@ function Admin() {
   const handleStatusChange = async (id, status) => {
     try {
       await updateBooking(id, { status });
-      addToast(`Booking ${status}`, "success");
+      addToast(t("admin.bookingStatusUpdated").replace("{status}", status), "success");
       fetchBookings();
       if (selectedBooking?._id === id) {
         setSelectedBooking({ ...selectedBooking, status });
       }
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to update status", "error");
+      if (!checkAuth(err)) addToast(t("admin.statusUpdateFailed"), "error");
     }
   };
 

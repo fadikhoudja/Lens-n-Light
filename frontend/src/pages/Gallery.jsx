@@ -17,6 +17,7 @@ function Gallery() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showBackTop, setShowBackTop] = useState(false);
+  const [retrying, setRetrying] = useState(false);
 
   const fetchPhotos = useCallback(async (p = 1, append = false) => {
     try {
@@ -65,8 +66,8 @@ function Gallery() {
           </svg>
         </div>
         <p className="text-zinc-400 text-lg">{error}</p>
-        <button onClick={() => { setLoading(true); setError(""); fetchPhotos(); }} className="text-sm text-amber-400 border border-amber-500/30 px-4 py-2 rounded-lg hover:bg-amber-500/10 transition-all cursor-pointer bg-transparent">
-          Try Again
+        <button onClick={() => { setRetrying(true); setError(""); fetchPhotos(); }} disabled={retrying} className="text-sm text-amber-400 border border-amber-500/30 px-4 py-2 rounded-lg hover:bg-amber-500/10 transition-all cursor-pointer bg-transparent disabled:opacity-40 disabled:cursor-not-allowed">
+          {retrying ? t("gallery.retrying") : t("gallery.retry")}
         </button>
       </div>
     );

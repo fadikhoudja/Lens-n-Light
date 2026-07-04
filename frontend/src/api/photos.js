@@ -22,7 +22,7 @@ export const uploadPhotos = async (files, category) => {
     method: "POST",
     headers: authHeader(),
     body: fd,
-    credentials: "include",
+
   });
   if (!res.ok) {
     const err = new Error("Failed to upload photos");
@@ -37,7 +37,7 @@ export const updatePhoto = async (id, data) => {
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...authHeader() },
     body: JSON.stringify(data),
-    credentials: "include",
+
   });
   if (!res.ok) {
     const err = new Error("Failed to update photo");
@@ -51,7 +51,7 @@ export const deletePhoto = async (id) => {
   const res = await fetch(`${API}/${id}`, {
     method: "DELETE",
     headers: authHeader(),
-    credentials: "include",
+
   });
   if (!res.ok) {
     const err = new Error("Failed to delete photo");
@@ -66,7 +66,7 @@ export const bulkCategorize = async (ids, category) => {
     method: "PATCH",
     headers: { "Content-Type": "application/json", ...authHeader() },
     body: JSON.stringify({ ids, category }),
-    credentials: "include",
+
   });
   if (!res.ok) {
     const err = new Error("Failed to update categories");
@@ -81,7 +81,7 @@ export const bulkDeletePhotos = async (ids) => {
     method: "DELETE",
     headers: { "Content-Type": "application/json", ...authHeader() },
     body: JSON.stringify({ ids }),
-    credentials: "include",
+
   });
   if (!res.ok) {
     const err = new Error("Failed to delete photos");

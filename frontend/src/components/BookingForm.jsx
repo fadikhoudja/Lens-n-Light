@@ -20,7 +20,7 @@ function BookingForm() {
       setSent(true);
       setForm({ name: "", phone: "", date: "", message: "" });
     } catch (err) {
-      addToast(err.message || "Failed to send request", "error");
+      addToast(err.message || t("booking.submitFailed"), "error");
     } finally {
       setSubmitting(false);
     }

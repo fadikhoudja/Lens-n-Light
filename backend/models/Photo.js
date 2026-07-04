@@ -8,5 +8,6 @@ const photoSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 photoSchema.index({ createdAt: -1 });
+photoSchema.index({ title: "text" });
 
 module.exports = mongoose.model("Photo", photoSchema);
