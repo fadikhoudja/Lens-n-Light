@@ -76,8 +76,8 @@ function Gallery() {
   return (
     <div>
       <section className="relative min-h-screen flex items-center justify-center -mt-[73px] px-4">
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-800 via-zinc-900 to-zinc-900" />
-        <div className="absolute inset-0 opacity-30" style={{
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-800 via-zinc-900 to-zinc-900 pointer-events-none" />
+        <div className="absolute inset-0 opacity-30 pointer-events-none" style={{
           backgroundImage: `radial-gradient(circle at 20% 50%, rgba(245,158,11,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(168,85,247,0.1) 0%, transparent 50%), radial-gradient(circle at 50% 80%, rgba(59,130,242,0.08) 0%, transparent 50%)`
         }} />
         <div className="relative z-10 text-center max-w-3xl animate-fade-in">

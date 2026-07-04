@@ -49,7 +49,7 @@ function Navbar() {
 
   return (
     <nav className={`flex items-center justify-between px-4 md:px-12 py-5 z-20 ${
-      isHome ? "absolute top-0 left-0 right-0 bg-transparent" : "fixed top-0 left-0 right-0 bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800"
+      isHome ? "fixed top-0 left-0 right-0 bg-transparent" : "fixed top-0 left-0 right-0 bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800"
     }`}>
       <Link to="/" className="text-xl font-bold tracking-tight flex items-center gap-2 group shrink-0">
         <span className="w-2 h-2 rounded-full bg-amber-400 inline-block group-hover:scale-150 transition-transform" />
