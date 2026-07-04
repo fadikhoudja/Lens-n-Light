@@ -87,15 +87,15 @@ function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="fixed inset-0 z-30 md:hidden" onClick={closeMenu}>
-          <div className="absolute inset-0 bg-black/40" />
+        <>
+          <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={closeMenu} />
           <div
-            className="absolute top-full left-0 right-0 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 flex flex-col gap-3 animate-fade-in"
+            className="fixed top-[73px] left-0 right-0 z-40 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 flex flex-col gap-3 animate-fade-in md:hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {links}
           </div>
-        </div>
+        </>
       )}
     </nav>
   );
