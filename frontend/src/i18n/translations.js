@@ -22,6 +22,7 @@ const translations = {
       empty: "No photos in this category yet.",
       emptySub: "Check back soon for new work.",
       loadMore: "Load More",
+      loadingMore: "Loading...",
       backToTop: "Back to Top",
     },
     booking: {
@@ -113,6 +114,7 @@ const translations = {
       empty: "Aucune photo dans cette catégorie pour le moment.",
       emptySub: "Revenez bientôt pour de nouveaux travaux.",
       loadMore: "Charger Plus",
+      loadingMore: "Chargement...",
       backToTop: "Retour en Haut",
     },
     booking: {
@@ -204,6 +206,7 @@ const translations = {
       empty: "لا توجد صور في هذه الفئة بعد.",
       emptySub: "تفقد قريبًا لأعمال جديدة.",
       loadMore: "تحميل المزيد",
+      loadingMore: "جاري التحميل...",
       backToTop: "العودة إلى الأعلى",
     },
     booking: {

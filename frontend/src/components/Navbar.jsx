@@ -21,26 +21,26 @@ function Navbar() {
 
   const links = (
     <>
-      <Link to="/" className={linkClass("/")} onClick={closeMenu}>
+      <Link to="/" className={`${linkClass("/")} py-3`} onClick={closeMenu}>
         {t("nav.gallery")}
       </Link>
-      <Link to="/book" className={linkClass("/book")} onClick={closeMenu}>
+      <Link to="/book" className={`${linkClass("/book")} py-3`} onClick={closeMenu}>
         {t("nav.book")}
       </Link>
       {authed ? (
         <>
-          <Link to="/admin" className={linkClass("/admin")} onClick={closeMenu}>
+          <Link to="/admin" className={`${linkClass("/admin")} py-3`} onClick={closeMenu}>
             {t("nav.admin")}
           </Link>
           <button
             onClick={() => { logout(); navigate("/"); closeMenu(); }}
-            className="text-sm text-zinc-400 hover:text-amber-400 transition-colors cursor-pointer bg-transparent font-normal p-0"
+            className="text-sm text-zinc-400 hover:text-amber-400 transition-colors cursor-pointer bg-transparent font-normal py-3 text-start"
           >
             {t("nav.logout")}
           </button>
         </>
       ) : (
-        <Link to="/admin/login" className="text-sm text-zinc-500 hover:text-amber-400 transition-colors" onClick={closeMenu}>
+        <Link to="/admin/login" className="text-sm text-zinc-500 hover:text-amber-400 transition-colors py-3" onClick={closeMenu}>
           {t("nav.adminLogin")}
         </Link>
       )}
@@ -67,7 +67,7 @@ function Navbar() {
         <LanguageSwitcher />
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-zinc-700/50 cursor-pointer"
+          className="w-11 h-11 flex items-center justify-center rounded-lg bg-white/5 border border-zinc-700/50 cursor-pointer"
         >
           <svg className="w-5 h-5 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             {menuOpen ? (

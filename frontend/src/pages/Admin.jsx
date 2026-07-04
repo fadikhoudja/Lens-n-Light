@@ -279,10 +279,10 @@ function Admin() {
               >
                 {CATEGORIES_WITH_AUTO.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <button onClick={handleBulkCategory} className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-amber-500/25 hover:border-amber-500/40 transition-all font-medium">
+              <button onClick={handleBulkCategory} className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-2 rounded-lg cursor-pointer hover:bg-amber-500/25 hover:border-amber-500/40 transition-all font-medium min-h-[44px]">
                 {t("admin.categorize")}
               </button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1.5 text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all font-medium">
+              <button onClick={handleBulkDelete} className="flex items-center gap-1.5 text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all font-medium min-h-[44px]">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -335,10 +335,10 @@ function Admin() {
                     >
                       {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
-                    <button onClick={handleEditSave} className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-amber-500/25 transition-all font-medium">
+                    <button onClick={handleEditSave} className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-2 rounded-lg cursor-pointer hover:bg-amber-500/25 transition-all font-medium min-h-[44px]">
                       {t("admin.save")}
                     </button>
-                    <button onClick={handleEditCancel} className="text-xs bg-zinc-700/50 text-zinc-400 border border-zinc-600/50 px-3 py-1.5 rounded-lg cursor-pointer hover:text-white transition-all">
+                    <button onClick={handleEditCancel} className="text-xs bg-zinc-700/50 text-zinc-400 border border-zinc-600/50 px-3 py-2 rounded-lg cursor-pointer hover:text-white transition-all min-h-[44px]">
                       {t("admin.cancel")}
                     </button>
                   </div>
@@ -351,12 +351,12 @@ function Admin() {
                   </div>
                 )}
                 <div className="flex items-center gap-2 shrink-0">
-                  <button onClick={() => handleEditStart(p)} className="md:opacity-0 md:group-hover:opacity-100 bg-zinc-700/50 border border-zinc-600/50 text-zinc-400 text-xs px-2.5 py-1.5 rounded-lg cursor-pointer hover:text-white hover:border-zinc-500 transition-all">
+                  <button onClick={() => handleEditStart(p)} className="md:opacity-0 md:group-hover:opacity-100 bg-zinc-700/50 border border-zinc-600/50 text-zinc-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:text-white hover:border-zinc-500 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
                     {t("admin.edit")}
                   </button>
                   <button onClick={() => {
                     setConfirmDelete({ type: "photo", id: p._id, message: "Delete this photo?" });
-                  }} className="md:opacity-0 md:group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-1.5 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all">
+                  }} className="md:opacity-0 md:group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
                     {t("admin.delete")}
                   </button>
                 </div>
@@ -366,8 +366,8 @@ function Admin() {
           </div>
           {photoPages > 1 && (
             <div className="flex items-center justify-between mt-4 text-sm">
-              <span className="text-zinc-500">{photoTotal} total</span>
-              <div className="flex gap-1">
+              <span className="text-zinc-500 shrink-0 me-2">{photoTotal} total</span>
+              <div className="flex gap-1 overflow-x-auto hide-scrollbar">
                 <button
                   disabled={photoPage <= 1}
                   onClick={() => fetchPhotos(photoPage - 1)}
@@ -439,9 +439,9 @@ function Admin() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </div>
-              <div className="flex-1 text-sm leading-relaxed min-w-0">
-                <strong>{b.name}</strong> <span className="text-zinc-500">— {b.phone}</span>
-                <br /><span className="text-zinc-400 text-xs">{b.date}{b.message ? ` · ${b.message.length > 40 ? b.message.slice(0, 40) + "…" : b.message}` : ""}</span>
+              <div className="flex-1 text-sm leading-relaxed min-w-0 overflow-hidden">
+                <strong className="truncate block">{b.name}</strong> <span className="text-zinc-500 text-xs">— {b.phone}</span>
+                <br /><span className="text-zinc-400 text-xs inline-block truncate w-full">{b.date}{b.message ? ` · ${b.message.length > 40 ? b.message.slice(0, 40) + "…" : b.message}` : ""}</span>
               </div>
               <span className={`text-[10px] uppercase tracking-wider font-medium px-2 py-1 rounded-md shrink-0 ${
                 b.status === "pending" ? "bg-amber-500/10 text-amber-400" :
@@ -453,8 +453,8 @@ function Admin() {
           ))}
           {bookingPages > 1 && (
             <div className="flex items-center justify-between mt-4 text-sm">
-              <span className="text-zinc-500">{bookingTotal} total</span>
-              <div className="flex gap-1">
+              <span className="text-zinc-500 shrink-0 me-2">{bookingTotal} total</span>
+              <div className="flex gap-1 overflow-x-auto hide-scrollbar">
                 <button
                   disabled={bookingPage <= 1}
                   onClick={() => fetchBookings(bookingPage - 1)}

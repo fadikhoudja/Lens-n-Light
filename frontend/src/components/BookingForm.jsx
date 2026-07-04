@@ -62,6 +62,7 @@ function BookingForm() {
         </svg>
         <input
           type="tel"
+          inputMode="numeric"
           placeholder={t("booking.phone")}
           value={form.phone}
           onChange={(e) => {

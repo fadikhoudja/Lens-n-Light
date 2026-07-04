@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { getPhotos } from "../api/photos";
 import PhotoCard from "../components/PhotoCard";
 import Lightbox from "../components/Lightbox";
@@ -92,9 +93,9 @@ function Gallery() {
             <button onClick={() => document.querySelector(".photo-grid")?.scrollIntoView({ behavior: "smooth" })} className="bg-amber-500 text-zinc-900 font-semibold px-8 py-3 sm:px-6 sm:py-2.5 rounded-full text-sm hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20">
               {t("hero.cta")}
             </button>
-            <a href="/book" className="border border-zinc-600 text-zinc-300 font-medium px-8 py-3 sm:px-6 sm:py-2.5 rounded-full text-sm hover:border-zinc-400 hover:text-white transition-all">
+            <Link to="/book" className="border border-zinc-600 text-zinc-300 font-medium px-8 py-3 sm:px-6 sm:py-2.5 rounded-full text-sm hover:border-zinc-400 hover:text-white transition-all">
               {t("hero.ctaBook")}
-            </a>
+            </Link>
           </div>
         </div>
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
@@ -145,7 +146,7 @@ function Gallery() {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="text-center py-24">
+            <div className="text-center py-16 md:py-24">
               <p className="text-zinc-500 text-lg">{t("gallery.empty")}</p>
               <p className="text-zinc-600 text-sm mt-1">{t("gallery.emptySub")}</p>
             </div>
@@ -169,7 +170,7 @@ function Gallery() {
                 {loadingMore ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
-                    Loading...
+                    {t("gallery.loadingMore")}
                   </span>
                 ) : (
                   t("gallery.loadMore")
@@ -183,7 +184,7 @@ function Gallery() {
       {showBackTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 left-6 z-40 w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center cursor-pointer hover:bg-amber-500/30 transition-all animate-fade-up"
+          className="fixed bottom-6 left-6 z-40 w-12 h-12 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center cursor-pointer hover:bg-amber-500/30 transition-all animate-fade-up"
         >
           <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />

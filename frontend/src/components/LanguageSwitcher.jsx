@@ -12,7 +12,7 @@ function LanguageSwitcher() {
         <button
           key={l}
           onClick={() => setLang(l)}
-          className={`text-xs px-2 py-1 rounded-md cursor-pointer transition-all ${
+          className={`text-sm px-3 py-1.5 rounded-md cursor-pointer transition-all ${
             lang === l
               ? "bg-amber-500/20 text-amber-400 font-medium"
               : "text-zinc-500 hover:text-zinc-300 bg-transparent"

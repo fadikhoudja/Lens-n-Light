@@ -109,7 +109,7 @@ function PhotoUpload({ onUpload }) {
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
         onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-zinc-600 hover:border-amber-500/50 rounded-xl p-10 text-center cursor-pointer transition-colors"
+        className="border-2 border-dashed border-zinc-600 hover:border-amber-500/50 rounded-xl p-6 md:p-10 text-center cursor-pointer transition-colors"
       >
         <svg className="w-10 h-10 text-zinc-500 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
