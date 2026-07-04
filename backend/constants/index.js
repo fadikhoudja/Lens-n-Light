@@ -11,6 +11,14 @@ function validateEnv() {
     console.error(`Missing required environment variables: ${missing.join(", ")}`);
     process.exit(1);
   }
+  if (process.env.JWT_SECRET.length < 16) {
+    console.error("JWT_SECRET must be at least 16 characters");
+    process.exit(1);
+  }
+  if (!/^\d+$/.test(process.env.PORT || "5000")) {
+    console.error("PORT must be a number");
+    process.exit(1);
+  }
   if (process.env.JWT_SECRET === "super-secret-key-change-in-production-123") {
     console.warn("WARNING: JWT_SECRET is still the default value. Generate a strong random secret for production.");
   }

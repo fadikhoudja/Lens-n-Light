@@ -1,7 +1,8 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { imageUrl } from "../utils/imageUrl";
 
 function Lightbox({ photo, photos = [], onClose }) {
+  const ref = useRef(null);
   const currentIndex = photos.findIndex((p) => p._id === photo._id);
   const prev = currentIndex > 0 ? photos[currentIndex - 1] : null;
   const next = currentIndex < photos.length - 1 ? photos[currentIndex + 1] : null;
@@ -15,6 +16,8 @@ function Lightbox({ photo, photos = [], onClose }) {
   }, [next, onClose]);
 
   useEffect(() => {
+    const el = ref.current;
+    if (el) el.focus();
     const handleKey = (e) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") goPrev();
@@ -29,9 +32,10 @@ function Lightbox({ photo, photos = [], onClose }) {
   }, [onClose, goPrev, goNext]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in">
+    <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-label={photo.title} className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in">
       <button
         onClick={() => onClose()}
+        aria-label="Close"
         className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
       >
         <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -42,6 +46,7 @@ function Lightbox({ photo, photos = [], onClose }) {
       {prev && (
         <button
           onClick={goPrev}
+          aria-label="Previous photo"
           className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
         >
           <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -52,6 +57,7 @@ function Lightbox({ photo, photos = [], onClose }) {
       {next && (
         <button
           onClick={goNext}
+          aria-label="Next photo"
           className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
         >
           <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

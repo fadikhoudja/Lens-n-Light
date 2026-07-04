@@ -87,16 +87,6 @@ function Admin() {
   useEffect(() => { fetchPhotos(); }, [search, categoryFilter]);
   useEffect(() => { fetchBookings(); }, [statusFilter]);
 
-  const handleDeletePhoto = async (id) => {
-    try {
-      await deletePhoto(id);
-      addToast("Photo deleted", "success");
-      fetchPhotos();
-    } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to delete photo", "error");
-    }
-  };
-
   const handleEditStart = (photo) => {
     setEditingId(photo._id);
     setEditTitle(photo.title);
@@ -107,11 +97,11 @@ function Admin() {
     if (!editingId) return;
     try {
       await updatePhoto(editingId, { title: editTitle, category: editCategory });
-      addToast("Photo updated", "success");
+      addToast(t("admin.photoUpdated"), "success");
       setEditingId(null);
       fetchPhotos();
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to update photo", "error");
+      if (!checkAuth(err)) addToast(t("admin.updatePhotoFailed"), "error");
     }
   };
 
@@ -135,11 +125,11 @@ function Admin() {
     if (selected.length === 0) return;
     try {
       await bulkCategorize(selected, bulkCategory);
-      addToast(`${selected.length} photos categorized`, "success");
+      addToast(t("admin.photosCategorized").replace("{count}", selected.length), "success");
       setSelected([]);
       fetchPhotos();
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to update categories", "error");
+      if (!checkAuth(err)) addToast(t("admin.categorizeFailed"), "error");
     }
   };
 
@@ -151,12 +141,28 @@ function Admin() {
   const confirmBulkDelete = async () => {
     try {
       await bulkDeletePhotos(selected);
-      addToast(`${selected.length} photos deleted`, "success");
+      addToast(t("admin.bulkDeleted").replace("{count}", selected.length), "success");
       setSelected([]);
       setConfirmDelete(null);
       fetchPhotos();
     } catch (err) {
-      if (!checkAuth(err)) addToast("Failed to delete photos", "error");
+      if (!checkAuth(err)) addToast(t("admin.bulkDeleteFailed"), "error");
+      setConfirmDelete(null);
+    }
+  };
+
+  const handleDeletePhoto = (id) => {
+    setConfirmDelete({ type: "photo", id, message: t("admin.confirmDeletePhoto") });
+  };
+
+  const confirmDeletePhoto = async () => {
+    try {
+      await deletePhoto(confirmDelete.id);
+      addToast(t("admin.photoDeleted"), "success");
+      setConfirmDelete(null);
+      fetchPhotos();
+    } catch (err) {
+      if (!checkAuth(err)) addToast(t("admin.deletePhotoFailed"), "error");
       setConfirmDelete(null);
     }
   };
@@ -354,9 +360,7 @@ function Admin() {
                   <button onClick={() => handleEditStart(p)} className="md:opacity-0 md:group-hover:opacity-100 bg-zinc-700/50 border border-zinc-600/50 text-zinc-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:text-white hover:border-zinc-500 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
                     {t("admin.edit")}
                   </button>
-                  <button onClick={() => {
-                    setConfirmDelete({ type: "photo", id: p._id, message: "Delete this photo?" });
-                  }} className="md:opacity-0 md:group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
+                  <button onClick={() => handleDeletePhoto(p._id)} className="md:opacity-0 md:group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
                     {t("admin.delete")}
                   </button>
                 </div>
@@ -536,7 +540,7 @@ function Admin() {
       {confirmDelete && (
         <ConfirmModal
           message={confirmDelete.message}
-          onConfirm={confirmDelete.type === "bulk" ? confirmBulkDelete : confirmDeleteBooking}
+          onConfirm={confirmDelete.type === "bulk" ? confirmBulkDelete : confirmDelete.type === "photo" ? confirmDeletePhoto : confirmDeleteBooking}
           onCancel={() => setConfirmDelete(null)}
         />
       )}

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { LanguageProvider } from "./i18n/LanguageContext";
@@ -45,9 +45,9 @@ function NotFound() {
       </div>
       <h1 className="text-4xl font-bold tracking-tight">404</h1>
       <p className="text-zinc-400 text-lg">Page not found</p>
-      <a href="/" className="text-sm text-amber-400 border border-amber-500/30 px-4 py-2 rounded-lg hover:bg-amber-500/10 transition-all">
+      <Link to="/" className="text-sm text-amber-400 border border-amber-500/30 px-4 py-2 rounded-lg hover:bg-amber-500/10 transition-all">
         Back to Gallery
-      </a>
+      </Link>
     </div>
   );
 }

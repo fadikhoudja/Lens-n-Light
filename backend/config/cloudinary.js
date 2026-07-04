@@ -8,9 +8,11 @@ cloudinary.config({
 
 function uploadBuffer(buffer, folder = "lens-and-light") {
   return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error("Cloudinary upload timed out")), 30000);
     const stream = cloudinary.uploader.upload_stream(
       { folder, resource_type: "image" },
       (err, result) => {
+        clearTimeout(timeout);
         if (err) reject(err);
         else resolve(result);
       }

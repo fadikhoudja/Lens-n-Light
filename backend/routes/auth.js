@@ -19,29 +19,20 @@ async function getHashedPassword() {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  if (!username || !password) {
+  if (!username || !password || typeof username !== "string" || typeof password !== "string") {
     return res.status(400).json({ error: "Username and password are required" });
   }
 
-  if (username !== process.env.ADMIN_USERNAME) {
-    return res.status(401).json({ error: "Invalid credentials" });
-  }
-
   const hash = await getHashedPassword();
-  const valid = await bcrypt.compare(password, hash);
-  if (!valid) {
+  const userMatches = username.trim() === process.env.ADMIN_USERNAME;
+  const valid = userMatches ? await bcrypt.compare(password, hash) : await bcrypt.compare(password, await bcrypt.hash("dummy", 12));
+
+  if (!valid || !userMatches) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
   const token = jwt.sign({ admin: username }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
-
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    expiresIn: "24h",
   });
 
   res.json({ token });

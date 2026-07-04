@@ -19,14 +19,16 @@ router.get("/", auth, async (req, res) => {
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 50));
     const skip = (page - 1) * limit;
     const filter = {};
-    if (req.query.status) filter.status = req.query.status;
+    if (req.query.status && typeof req.query.status === "string") {
+      filter.status = req.query.status;
+    }
     const [bookings, total] = await Promise.all([
       Booking.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
       Booking.countDocuments(filter),
     ]);
     res.json({ bookings, total, page, pages: Math.ceil(total / limit) });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err); res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -36,7 +38,7 @@ router.get("/:id", auth, async (req, res) => {
     if (!booking) return res.status(404).json({ error: "Booking not found" });
     res.json(booking);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err); res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -53,10 +55,16 @@ router.post("/", bookingLimiter, async (req, res) => {
     if (!date) {
       return res.status(400).json({ error: "Date is required" });
     }
+    if (message && message.length > 1000) {
+      return res.status(400).json({ error: "Message must be under 1000 characters" });
+    }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const bookingDate = new Date(date);
+    if (isNaN(bookingDate.getTime())) {
+      return res.status(400).json({ error: "Invalid date" });
+    }
     if (bookingDate < today) {
       return res.status(400).json({ error: "Date must be today or in the future" });
     }
@@ -70,24 +78,47 @@ router.post("/", bookingLimiter, async (req, res) => {
 
     res.status(201).json(booking);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error("POST /api/bookings error:", err); res.status(400).json({ error: "Booking failed" });
   }
 });
+
+const VALID_STATUSES = ["pending", "confirmed", "completed", "cancelled"];
 
 router.patch("/:id", auth, async (req, res) => {
   try {
     const { status, name, phone, date, message } = req.body;
     const update = {};
-    if (status) update.status = status;
-    if (name) update.name = name.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]));
-    if (phone) update.phone = phone;
-    if (date) update.date = date;
+    if (status !== undefined) {
+      if (!VALID_STATUSES.includes(status)) {
+        return res.status(400).json({ error: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}` });
+      }
+      update.status = status;
+    }
+    if (name !== undefined) {
+      if (typeof name !== "string" || name.trim().length === 0) {
+        return res.status(400).json({ error: "Name cannot be empty" });
+      }
+      update.name = name.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]));
+    }
+    if (phone !== undefined) {
+      if (!/^\d{10}$/.test(phone)) {
+        return res.status(400).json({ error: "Phone must be exactly 10 digits" });
+      }
+      update.phone = phone;
+    }
+    if (date !== undefined) {
+      const d = new Date(date);
+      if (isNaN(d.getTime())) {
+        return res.status(400).json({ error: "Invalid date" });
+      }
+      update.date = date;
+    }
     if (message !== undefined) update.message = message.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]));
-    const booking = await Booking.findByIdAndUpdate(req.params.id, update, { new: true });
+    const booking = await Booking.findByIdAndUpdate(req.params.id, update, { new: true, runValidators: true });
     if (!booking) return res.status(404).json({ error: "Booking not found" });
     res.json(booking);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err); res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -97,7 +128,7 @@ router.delete("/:id", auth, async (req, res) => {
     if (!booking) return res.status(404).json({ error: "Booking not found" });
     res.json({ message: "Booking deleted" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err); res.status(500).json({ error: "Internal server error" });
   }
 });
 

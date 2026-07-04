@@ -20,7 +20,9 @@ function Gallery() {
 
   const fetchPhotos = useCallback(async (p = 1, append = false) => {
     try {
-      const data = await getPhotos(p, 20);
+      const filters = {};
+      if (filter !== "All") filters.category = filter;
+      const data = await getPhotos(p, 20, filters);
       if (append) {
         setPhotos((prev) => [...prev, ...(data.photos || data)]);
       } else {
@@ -29,12 +31,12 @@ function Gallery() {
       setTotalPages(data.pages || 1);
       setPage(data.page || 1);
     } catch {
-      setError("Failed to load gallery");
+      setError(t("gallery.loadError"));
     } finally {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, []);
+  }, [filter]);
 
   useEffect(() => { fetchPhotos(); }, [fetchPhotos]);
 
@@ -160,7 +162,7 @@ function Gallery() {
             </div>
           )}
 
-          {page < totalPages && filter === "All" && (
+          {page < totalPages && (
             <div className="flex justify-center mt-10">
               <button
                 onClick={handleLoadMore}
@@ -195,7 +197,7 @@ function Gallery() {
       {lightboxPhoto && (
         <Lightbox
           photo={lightboxPhoto}
-          photos={photos}
+          photos={filtered}
           onClose={(nextPhoto) => setLightboxPhoto(nextPhoto || null)}
         />
       )}
