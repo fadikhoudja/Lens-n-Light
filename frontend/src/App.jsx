@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { LanguageProvider } from "./i18n/LanguageContext";
@@ -57,7 +57,7 @@ function App() {
     <ErrorBoundary>
       <ToastProvider>
       <LanguageProvider>
-        <BrowserRouter>
+        <HashRouter>
           <ScrollToTop />
           <div className="min-h-screen bg-zinc-900 text-white">
             <Suspense fallback={<PageSkeleton />}>
@@ -90,7 +90,7 @@ function App() {
               </Routes>
             </Suspense>
           </div>
-        </BrowserRouter>
+        </HashRouter>
       </LanguageProvider>
       </ToastProvider>
     </ErrorBoundary>
