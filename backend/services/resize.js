@@ -9,7 +9,7 @@ async function resizeBuffer(buffer) {
   if (!metadata.width || metadata.width <= MAX_WIDTH) return buffer;
 
   const fmt = FORMAT_MAP[metadata.format] || "jpeg";
-  let pipeline = sharp(buffer).resize({ width: MAX_WIDTH, withoutEnlargement: true });
+  let pipeline = sharp(buffer).rotate().resize({ width: MAX_WIDTH, withoutEnlargement: true });
 
   if (fmt === "jpeg") {
     pipeline = pipeline.jpeg({ quality: JPEG_QUALITY, mozjpeg: true });
