@@ -5,7 +5,7 @@ import { authHeader } from "../api/auth";
 import API_BASE from "../api/config";
 import { CATEGORIES_WITH_AUTO } from "../constants/categories";
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 function PhotoUpload({ onUpload }) {
   const { t } = useLanguage();
@@ -24,7 +24,7 @@ function PhotoUpload({ onUpload }) {
         return false;
       }
       if (f.size > MAX_FILE_SIZE) {
-        addToast(`${f.name} exceeds 20MB limit`, "error");
+        addToast(`${f.name} exceeds 50MB limit`, "error");
         return false;
       }
     }
@@ -43,7 +43,7 @@ function PhotoUpload({ onUpload }) {
     const images = fileList.filter((f) => f.type.startsWith("image/") && f.size <= MAX_FILE_SIZE);
     const rejected = fileList.filter((f) => !f.type.startsWith("image/") || f.size > MAX_FILE_SIZE);
     for (const r of rejected) {
-      addToast(`${r.name}: ${r.size > MAX_FILE_SIZE ? "exceeds 20MB" : "not an image"}`, "error");
+      addToast(`${r.name}: ${r.size > MAX_FILE_SIZE ? "exceeds 50MB" : "not an image"}`, "error");
     }
     setFiles(images);
     setProgress(0);
