@@ -27,6 +27,7 @@ const translations = {
       loadError: "Failed to load gallery",
       retry: "Try Again",
       retrying: "Retrying...",
+      consent: "All individuals featured in this gallery have consented to their images being posted. Every person shown is aware and has agreed.",
     },
     booking: {
       badge: "Get in Touch",
@@ -145,6 +146,7 @@ const translations = {
       loadError: "Échec du chargement de la galerie",
       retry: "Réessayer",
       retrying: "Réessai...",
+      consent: "Toutes les personnes présentées dans cette galerie ont consenti à la publication de leurs images. Chaque personne montrée est informée et a accepté.",
     },
     booking: {
       badge: "Prenez Contact",
@@ -263,6 +265,7 @@ const translations = {
       loadError: "فشل تحميل المعرض",
       retry: "إعادة المحاولة",
       retrying: "جاري إعادة المحاولة...",
+      consent: "جميع الأشخاص الذين تظهر صورهم في هذا المعرض وافقوا على نشر صورهم. كل شخص ظاهر على علم وموافق.",
     },
     booking: {
       badge: "تواصل معي",

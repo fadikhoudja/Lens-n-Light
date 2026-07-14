@@ -111,9 +111,7 @@ function Gallery() {
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="mb-10 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-center">
-            <p className="text-zinc-400 text-sm md:text-base">
-              All individuals featured in this gallery have consented to their images being posted. Every person shown is aware and has agreed.
-            </p>
+            <p className="text-zinc-400 text-sm md:text-base">{t("gallery.consent")}</p>
           </div>
           <div className="flex items-center justify-between mb-10">
             <div>
