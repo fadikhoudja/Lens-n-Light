@@ -59,7 +59,7 @@ function Navbar() {
       isHome && !scrolled ? "bg-transparent" : "bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800"
     }`}>
       <Link to="/" className="flex items-center gap-3 group shrink-0">
-        <img src="/logo.png" alt="Creative Studio" className="h-10 w-auto rounded-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-amber-500/30" />
+        <img src="/logo.png" alt="Creative Studio" className="h-10 w-auto transition-all duration-300 group-hover:scale-110 group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
         <span className="hidden sm:inline text-xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wider">
           <span className="font-[family-name:var(--font-display)] italic text-amber-400 transition-colors duration-300 group-hover:text-amber-300">Creative</span>
           <span className="text-white transition-colors duration-300 group-hover:text-zinc-300">Studio</span>
