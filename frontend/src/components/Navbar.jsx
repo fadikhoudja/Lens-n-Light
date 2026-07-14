@@ -58,11 +58,12 @@ function Navbar() {
     <nav className={`flex items-center justify-between px-4 md:px-12 py-5 z-20 fixed top-0 left-0 right-0 ${
       isHome && !scrolled ? "bg-transparent" : "bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800"
     }`}>
-      <Link to="/" className="text-xl font-bold tracking-tight flex items-center gap-2 group shrink-0">
-        <span className="w-2 h-2 rounded-full bg-amber-400 inline-block group-hover:scale-150 transition-transform" />
-        <span className="font-[family-name:var(--font-display)] italic text-amber-400">Lens</span>
-        <span className="text-white">&</span>
-        <span className="text-white">Light</span>
+      <Link to="/" className="flex items-center gap-3 group shrink-0">
+        <img src="/logo.jpeg" alt="Creative Studio" className="h-10 w-auto rounded-lg" />
+        <span className="hidden sm:inline text-xl font-bold tracking-tight">
+          <span className="font-[family-name:var(--font-display)] italic text-amber-400">Creative</span>
+          <span className="text-white">Studio</span>
+        </span>
       </Link>
 
       <div className="hidden md:flex items-center gap-6">

@@ -30,7 +30,7 @@ async function notifyNewBooking(booking) {
 
   try {
     const info = await transporter.sendMail({
-      from: `"Lens & Light" <${process.env.SMTP_USER}>`,
+      from: `"Creative Studio" <${process.env.SMTP_USER}>`,
       to: process.env.ADMIN_EMAIL,
       subject: "New Booking Request",
       html: `
