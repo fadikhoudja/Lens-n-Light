@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { isAuthenticated, logout } from "../api/auth";
+import { Link, useLocation } from "react-router-dom";
 import { useLanguage } from "../i18n/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 function Navbar() {
   const { pathname } = useLocation();
   const { t } = useLanguage();
-  const navigate = useNavigate();
-  const authed = isAuthenticated();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,23 +31,7 @@ function Navbar() {
       <Link to="/book" className={`${linkClass("/book")} py-3`} onClick={closeMenu}>
         {t("nav.book")}
       </Link>
-      {authed ? (
-        <>
-          <Link to="/admin" className={`${linkClass("/admin")} py-3`} onClick={closeMenu}>
-            {t("nav.admin")}
-          </Link>
-          <button
-            onClick={() => { logout(); navigate("/"); closeMenu(); }}
-            className="text-sm text-zinc-400 hover:text-amber-400 transition-colors cursor-pointer bg-transparent font-normal py-3 text-start"
-          >
-            {t("nav.logout")}
-          </button>
-        </>
-      ) : (
-        <Link to="/admin/login" className="text-sm text-zinc-500 hover:text-amber-400 transition-colors py-3" onClick={closeMenu}>
-          {t("nav.adminLogin")}
-        </Link>
-      )}
+
     </>
   );
 
