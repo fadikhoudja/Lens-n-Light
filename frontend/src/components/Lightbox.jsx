@@ -3,7 +3,7 @@ import { imageUrl } from "../utils/imageUrl";
 
 function Lightbox({ photo, photos = [], onClose }) {
   const ref = useRef(null);
-  const currentIndex = photos.findIndex((p) => p._id === photo._id);
+  const currentIndex = photos.findIndex((p) => p.id === photo.id);
   const prev = currentIndex > 0 ? photos[currentIndex - 1] : null;
   const next = currentIndex < photos.length - 1 ? photos[currentIndex + 1] : null;
 
