@@ -27,19 +27,19 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm animate-fade-up">
+      <div className="w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/20">
-            <svg className="w-6 h-6 text-zinc-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="w-10 h-10 rounded-full bg-warm flex items-center justify-center mx-auto mb-3">
+            <svg className="w-5 h-5 text-paper" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold">{t("login.title")}</h1>
-          <p className="text-zinc-500 text-sm mt-1">{t("login.subtitle")}</p>
+          <h1 className="text-xl font-[family-name:var(--font-display)]">{t("login.title")}</h1>
+          <p className="text-ink-muted text-sm mt-1">{t("login.subtitle")}</p>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-2xl p-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 border border-warm/10 p-6 rounded-sm">
           {error && (
-            <div className="bg-red-900/30 border border-red-800/50 text-red-400 text-sm rounded-xl px-4 py-2.5 text-center">
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-2.5 text-center animate-fade-in">
               {error}
             </div>
           )}
@@ -48,7 +48,7 @@ function Login() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            className="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all placeholder-zinc-500"
+            className="w-full border border-warm/20 bg-transparent px-4 py-3 text-sm inp placeholder:text-ink-muted/40"
           />
           <input
             type="password"
@@ -56,16 +56,16 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full bg-zinc-900/80 border border-zinc-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 transition-all placeholder-zinc-500"
+            className="w-full border border-warm/20 bg-transparent px-4 py-3 text-sm inp placeholder:text-ink-muted/40"
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-900 font-semibold py-3 rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-300 shadow-lg shadow-amber-500/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full bg-warm text-paper font-medium py-3 rounded-sm btn hover:bg-warm-dark disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="w-4 h-4 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-paper/50 border-t-transparent rounded-full animate-spin" />
                 {t("login.login")}
               </span>
             ) : (

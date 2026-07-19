@@ -16,32 +16,10 @@ function PhotoUpload({ onUpload }) {
   const [category, setCategory] = useState("Auto");
   const inputRef = useRef(null);
 
-  const validateFiles = (fileList) => {
-    const arr = Array.from(fileList);
-    for (const f of arr) {
-      if (!f.type.startsWith("image/")) {
-        addToast(`${f.name} is not an image`, "error");
-        return false;
-      }
-      if (f.size > MAX_FILE_SIZE) {
-        addToast(`${f.name} exceeds 50MB limit`, "error");
-        return false;
-      }
-    }
-    return true;
-  };
-
   const handleSelect = (e) => {
-    if (!validateFiles(e.target.files)) return;
-    setFiles(Array.from(e.target.files));
-    setProgress(0);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const fileList = Array.from(e.dataTransfer.files);
-    const images = fileList.filter((f) => f.type.startsWith("image/") && f.size <= MAX_FILE_SIZE);
-    const rejected = fileList.filter((f) => !f.type.startsWith("image/") || f.size > MAX_FILE_SIZE);
+    const arr = Array.from(e.target.files);
+    const images = arr.filter((f) => f.type.startsWith("image/") && f.size <= MAX_FILE_SIZE);
+    const rejected = arr.filter((f) => !f.type.startsWith("image/") || f.size > MAX_FILE_SIZE);
     for (const r of rejected) {
       addToast(`${r.name}: ${r.size > MAX_FILE_SIZE ? "exceeds 50MB" : "not an image"}`, "error");
     }
@@ -95,38 +73,26 @@ function PhotoUpload({ onUpload }) {
   };
 
   return (
-    <div className="bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 p-6 rounded-xl mb-6">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center">
-          <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-          </svg>
-        </div>
-        <h2 className="text-lg font-semibold">{t("admin.uploadTitle")}</h2>
-      </div>
+    <div className="border border-warm/10 p-6 mb-6">
+      <h2 className="text-base font-[family-name:var(--font-display)] mb-4">{t("admin.uploadTitle")}</h2>
 
       <div
-        onDrop={handleDrop}
-        onDragOver={(e) => e.preventDefault()}
         onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-zinc-600 hover:border-amber-500/50 rounded-xl p-6 md:p-10 text-center cursor-pointer transition-colors"
+        className="border-2 border-dashed border-warm/20 hover:border-warm/50 p-8 text-center cursor-pointer transition-all duration-300"
       >
-        <svg className="w-10 h-10 text-zinc-500 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
-        </svg>
-        <p className="text-zinc-400 text-sm mb-1">{t("admin.dropText")}</p>
-        <p className="text-zinc-600 text-xs">{t("admin.dropHint")}</p>
+        <p className="text-ink-muted text-sm">{t("admin.dropText")}</p>
+        <p className="text-ink-muted/50 text-xs mt-1">{t("admin.dropHint")}</p>
         <input ref={inputRef} type="file" multiple accept="image/*" onChange={handleSelect} className="hidden" />
       </div>
 
       {files.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-4 animate-fade-in">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-zinc-400">{t(files.length === 1 ? "admin.fileSelected" : "admin.filesSelected").replace("{count}", files.length)}</span>
+            <span className="text-sm text-ink-muted">{t(files.length === 1 ? "admin.fileSelected" : "admin.filesSelected").replace("{count}", files.length)}</span>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="text-xs bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1 text-zinc-300 focus:outline-none focus:border-amber-500/50 cursor-pointer"
+              className="text-xs border border-warm/20 bg-transparent px-2 py-1 text-ink sel"
             >
               {CATEGORIES_WITH_AUTO.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -135,24 +101,21 @@ function PhotoUpload({ onUpload }) {
           </div>
           <div className="flex flex-wrap gap-2 mb-4">
             {files.map((f, i) => (
-              <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-zinc-700 group">
+              <div key={i} className="relative w-16 h-16 overflow-hidden border border-warm/10">
                 <img src={URL.createObjectURL(f)} alt="" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] text-zinc-300 px-1 text-center leading-tight">
-                  {f.name.length > 20 ? f.name.slice(0, 18) + "…" : f.name}
-                </div>
               </div>
             ))}
           </div>
 
           {uploading && (
             <div className="mb-4">
-              <div className="flex items-center justify-between text-xs text-zinc-400 mb-1.5">
+              <div className="flex items-center justify-between text-xs text-ink-muted mb-1">
                 <span>{t("admin.uploading")}</span>
                 <span>{progress}%</span>
               </div>
-              <div className="w-full h-2 bg-zinc-700 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-warm/10 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-amber-500 to-amber-400 rounded-full transition-all duration-300"
+                  className="h-full bg-warm transition-all duration-300 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -163,11 +126,11 @@ function PhotoUpload({ onUpload }) {
             <button
               onClick={handleUpload}
               disabled={uploading}
-              className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-900 font-semibold py-2.5 rounded-lg hover:from-amber-400 hover:to-amber-500 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-amber-500/10"
+              className="flex-1 bg-warm text-paper font-medium py-2.5 btn hover:bg-warm-dark disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {uploading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="w-4 h-4 border-2 border-zinc-900 border-t-transparent rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-paper/50 border-t-transparent rounded-full animate-spin" />
                   {t("admin.uploading")}
                 </span>
               ) : (
@@ -177,7 +140,7 @@ function PhotoUpload({ onUpload }) {
             <button
               onClick={() => { setFiles([]); setProgress(0); if (inputRef.current) inputRef.current.value = ""; }}
               disabled={uploading}
-              className="px-4 py-2.5 rounded-lg border border-zinc-700 text-zinc-400 text-sm cursor-pointer hover:text-white hover:border-zinc-500 transition-colors bg-transparent disabled:opacity-40"
+              className="px-4 py-2.5 border border-warm/20 text-ink-muted text-sm btn hover:text-ink hover:border-warm/40 bg-transparent disabled:opacity-40"
             >
               {t("admin.clear")}
             </button>

@@ -31,32 +31,15 @@ export function ToastProvider({ children }) {
           <div
             key={toast.id}
             onClick={() => removeToast(toast.id)}
-            className={`pointer-events-auto cursor-pointer animate-fade-up px-5 py-3 rounded-xl shadow-2xl backdrop-blur-md border text-sm font-medium max-w-sm transition-all ${
+            className={`pointer-events-auto cursor-pointer animate-slide-up px-4 py-3 border text-sm font-medium max-w-sm transition-all bg-paper shadow-sm ${
               toast.type === "success"
-                ? "bg-emerald-900/80 border-emerald-700/50 text-emerald-200"
+                ? "border-emerald-200 text-emerald-700"
                 : toast.type === "error"
-                ? "bg-red-900/80 border-red-700/50 text-red-200"
-                : "bg-zinc-800/90 border-zinc-700/50 text-zinc-200"
+                ? "border-red-200 text-red-600"
+                : "border-warm/20 text-ink"
             }`}
           >
-            <div className="flex items-center gap-2.5">
-              {toast.type === "success" && (
-                <svg className="w-4 h-4 shrink-0 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-              {toast.type === "error" && (
-                <svg className="w-4 h-4 shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              )}
-              {toast.type === "info" && (
-                <svg className="w-4 h-4 shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              )}
-              <span>{toast.message}</span>
-            </div>
+            {toast.message}
           </div>
         ))}
       </div>

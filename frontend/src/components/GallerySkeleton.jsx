@@ -1,31 +1,20 @@
-function SkeletonCard() {
-  return (
-    <div className="rounded-2xl overflow-hidden aspect-[4/3] bg-zinc-800/50 animate-pulse">
-      <div className="w-full h-full bg-zinc-700/30" />
-    </div>
-  );
-}
-
 function GallerySkeleton() {
   return (
-    <div className="pt-24">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between mb-10">
-          <div className="space-y-2">
-            <div className="h-9 w-48 bg-zinc-800 rounded-lg animate-pulse" />
-            <div className="h-4 w-64 bg-zinc-800/50 rounded animate-pulse" />
-          </div>
-          <div className="hidden md:flex gap-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-9 w-20 bg-zinc-800 rounded-full animate-pulse" />
-            ))}
-          </div>
+    <div className="pt-24 max-w-6xl mx-auto px-4">
+      <div className="flex items-center justify-between mb-10">
+        <div className="space-y-2">
+          <div className="h-9 w-48 bg-warm/10 rounded animate-pulse" />
+          <div className="h-4 w-64 bg-warm/5 rounded animate-pulse" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonCard key={i} />
-          ))}
-        </div>
+      </div>
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}>
+            <div className="bg-warm/5 aspect-[4/3] rounded-sm" />
+            <div className="mt-2 h-4 w-3/4 bg-warm/5 rounded" />
+            <div className="mt-1 h-3 w-1/3 bg-warm/5 rounded" />
+          </div>
+        ))}
       </div>
     </div>
   );

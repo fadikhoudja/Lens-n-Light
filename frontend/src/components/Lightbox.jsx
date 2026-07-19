@@ -32,13 +32,13 @@ function Lightbox({ photo, photos = [], onClose }) {
   }, [onClose, goPrev, goNext]);
 
   return (
-    <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-label={photo.title} className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in">
+    <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-label={photo.title} className="fixed inset-0 z-50 bg-paper flex items-center justify-center p-4 animate-fade-in">
       <button
         onClick={() => onClose()}
         aria-label="Close"
-        className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center transition-all duration-200 cursor-pointer z-10 btn"
       >
-        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
@@ -46,10 +46,10 @@ function Lightbox({ photo, photos = [], onClose }) {
       {prev && (
         <button
           onClick={goPrev}
-          aria-label="Previous photo"
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+          aria-label="Previous"
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center transition-all duration-200 cursor-pointer z-10 btn"
         >
-          <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
@@ -57,10 +57,10 @@ function Lightbox({ photo, photos = [], onClose }) {
       {next && (
         <button
           onClick={goNext}
-          aria-label="Next photo"
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+          aria-label="Next"
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center transition-all duration-200 cursor-pointer z-10 btn"
         >
-          <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
         </button>
@@ -69,13 +69,13 @@ function Lightbox({ photo, photos = [], onClose }) {
       <img
         src={imageUrl(photo)}
         alt={photo.title}
-        className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
+        className="max-w-full max-h-full object-contain animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       />
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full text-center">
-        <p className="text-white font-medium text-sm">{photo.title}</p>
+      <div className="absolute bottom-4 bg-paper/80 px-5 py-2 text-center animate-fade-in-up">
+        <p className="text-sm text-ink font-[family-name:var(--font-display)]">{photo.title}</p>
         {photo.category && (
-          <span className="text-amber-400 text-xs uppercase tracking-wider ml-2">{photo.category}</span>
+          <span className="text-xs text-ink-muted ml-1">{photo.category}</span>
         )}
       </div>
     </div>

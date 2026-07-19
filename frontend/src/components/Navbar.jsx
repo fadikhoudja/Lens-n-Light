@@ -17,33 +17,31 @@ function Navbar() {
   }, []);
 
   const linkClass = (path) =>
-    `text-sm tracking-wide transition-all ${
-      pathname === path ? "text-white" : "text-zinc-400 hover:text-white"
+    `text-sm transition-all duration-200 ${
+      pathname === path ? "text-ink font-medium" : "text-ink-muted hover:text-ink"
     }`;
 
   const closeMenu = () => setMenuOpen(false);
 
   const links = (
     <>
-      <Link to="/" className={`${linkClass("/")} py-3`} onClick={closeMenu}>
+      <Link to="/" className={`${linkClass("/")} py-2`} onClick={closeMenu}>
         {t("nav.gallery")}
       </Link>
-      <Link to="/book" className={`${linkClass("/book")} py-3`} onClick={closeMenu}>
+      <Link to="/book" className={`${linkClass("/book")} py-2`} onClick={closeMenu}>
         {t("nav.book")}
       </Link>
-
     </>
   );
 
   return (
-    <nav className={`flex items-center justify-between px-4 md:px-12 py-5 z-20 fixed top-0 left-0 right-0 ${
-      isHome && !scrolled ? "bg-transparent" : "bg-zinc-900/90 backdrop-blur-lg border-b border-zinc-800"
+    <nav className={`flex items-center justify-between px-4 md:px-10 py-4 fixed top-0 left-0 right-0 z-20 transition-all duration-500 ${
+      isHome && !scrolled ? "bg-transparent" : "bg-paper/90 border-b border-warm/10"
     }`}>
-      <Link to="/" className="flex items-center gap-3 group shrink-0">
-        <img src="/logo.png" alt="Creative Studio" className="h-10 w-auto transition-all duration-300 group-hover:scale-110 group-hover:brightness-110 group-hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
-        <span className="hidden sm:inline text-xl font-bold tracking-tight transition-all duration-300 group-hover:tracking-wider">
-          <span className="font-[family-name:var(--font-display)] italic text-amber-400 transition-colors duration-300 group-hover:text-amber-300">Creative</span>
-          <span className="text-white transition-colors duration-300 group-hover:text-zinc-300">Studio</span>
+      <Link to="/" className="flex items-center gap-2 shrink-0 group">
+        <img src="/logo.png" alt="Fadi Khoudja" className="h-9 w-auto transition-transform duration-300 group-hover:scale-105" />
+        <span className="hidden sm:inline font-[family-name:var(--font-display)] italic text-lg text-warm transition-colors duration-300 group-hover:text-warm-dark">
+          Fadi Khoudja
         </span>
       </Link>
 
@@ -56,9 +54,9 @@ function Navbar() {
         <LanguageSwitcher />
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="w-11 h-11 flex items-center justify-center rounded-lg bg-white/5 border border-zinc-700/50 cursor-pointer"
+          className="w-10 h-10 flex items-center justify-center rounded-lg border border-warm/20 btn bg-transparent"
         >
-          <svg className="w-5 h-5 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             {menuOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -70,11 +68,8 @@ function Navbar() {
 
       {menuOpen && (
         <>
-          <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={closeMenu} />
-          <div
-            className="fixed top-[73px] left-0 right-0 z-40 bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 flex flex-col gap-3 animate-fade-in md:hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="fixed inset-0 z-30 bg-black/20 animate-fade-in" onClick={closeMenu} />
+          <div className="fixed top-[57px] left-0 right-0 z-40 bg-paper border-b border-warm/10 px-4 py-4 flex flex-col gap-2 animate-fade-in-down" onClick={(e) => e.stopPropagation()}>
             {links}
           </div>
         </>

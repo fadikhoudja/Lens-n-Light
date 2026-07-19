@@ -215,27 +215,27 @@ function Admin() {
     <div className="animate-fade-in">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("admin.title")}</h1>
-          <p className="text-zinc-500 text-sm mt-0.5">{t("admin.subtitle")}</p>
+          <h1 className="text-2xl font-[family-name:var(--font-display)]">{t("admin.title")}</h1>
+          <p className="text-ink-muted text-sm mt-0.5">{t("admin.subtitle")}</p>
         </div>
-        <button onClick={() => { logout(); navigate("/admin/login"); }} className="text-sm text-zinc-400 border border-zinc-700 px-4 py-2 rounded-xl cursor-pointer hover:text-white hover:border-zinc-500 transition-all bg-transparent">
+        <button onClick={() => { logout(); navigate("/admin/login"); }} className="text-sm text-ink-muted border border-warm/20 px-4 py-2 btn hover:text-ink hover:border-warm/40 bg-transparent">
           {t("admin.logout")}
         </button>
       </div>
 
-      <div className="flex gap-1 p-1 bg-zinc-800/50 rounded-xl w-fit mb-8">
+      <div className="flex gap-1 mb-8 border-b border-warm/10">
         <button
           onClick={() => setActiveTab("photos")}
-          className={`px-6 py-2 rounded-lg cursor-pointer text-sm font-medium transition-all ${
-            activeTab === "photos" ? "bg-zinc-700 text-white shadow-sm" : "text-zinc-400 hover:text-white bg-transparent"
+          className={`px-5 py-2 cursor-pointer text-sm transition-all duration-200 ${
+            activeTab === "photos" ? "text-ink border-b-2 border-warm" : "text-ink-muted hover:text-ink border-b-2 border-transparent"
           }`}
         >
           {t("admin.tabPhotos")}
         </button>
         <button
           onClick={() => setActiveTab("bookings")}
-          className={`px-6 py-2 rounded-lg cursor-pointer text-sm font-medium transition-all ${
-            activeTab === "bookings" ? "bg-zinc-700 text-white shadow-sm" : "text-zinc-400 hover:text-white bg-transparent"
+          className={`px-5 py-2 cursor-pointer text-sm transition-all duration-200 ${
+            activeTab === "bookings" ? "text-ink border-b-2 border-warm" : "text-ink-muted hover:text-ink border-b-2 border-transparent"
           }`}
         >
           {t("admin.tabBookings")}
@@ -247,21 +247,16 @@ function Admin() {
           <PhotoUpload onUpload={fetchPhotos} />
 
           <div className="flex flex-col sm:flex-row gap-2 mb-4">
-            <div className="relative flex-1">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                placeholder={t("admin.search")}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-zinc-800/50 border border-zinc-700/50 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-amber-500/50 transition-all placeholder-zinc-500"
-              />
-            </div>
+            <input
+              placeholder={t("admin.search")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 border border-warm/20 bg-transparent px-4 py-2.5 text-sm inp placeholder:text-ink-muted/40"
+            />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="text-sm bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-3 py-2.5 text-zinc-300 focus:outline-none focus:border-amber-500/50 cursor-pointer"
+              className="text-sm border border-warm/20 bg-transparent px-3 py-2.5 text-ink sel"
             >
               <option value="">{t("admin.allCategories")}</option>
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -269,29 +264,19 @@ function Admin() {
           </div>
 
           {selected.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mb-4 px-4 py-3 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/15 rounded-xl shadow-sm shadow-amber-500/5">
-              <div className="flex items-center gap-2 text-sm text-zinc-300">
-                <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-medium">{selected.length}</span>
-                <span className="text-zinc-500">{t("admin.selected")}</span>
-              </div>
-              <div className="h-5 w-px bg-zinc-700/50 hidden sm:block" />
+            <div className="flex flex-wrap items-center gap-2 mb-4 px-4 py-3 bg-warm/5 border border-warm/10">
+              <span className="text-sm text-ink-muted">{selected.length} {t("admin.selected")}</span>
               <select
                 value={bulkCategory}
                 onChange={(e) => setBulkCategory(e.target.value)}
-                className="text-xs bg-zinc-900/80 border border-zinc-700/60 rounded-lg px-2.5 py-1.5 text-zinc-300 focus:outline-none focus:border-amber-500/50 cursor-pointer"
+                className="text-xs border border-warm/20 bg-transparent px-2 py-1.5 text-ink sel"
               >
                 {CATEGORIES_WITH_AUTO.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <button onClick={handleBulkCategory} className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-2 rounded-lg cursor-pointer hover:bg-amber-500/25 hover:border-amber-500/40 transition-all font-medium min-h-[44px]">
+              <button onClick={handleBulkCategory} className="text-xs bg-warm/10 text-warm-dark border border-warm/20 px-3 py-2 btn">
                 {t("admin.categorize")}
               </button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1.5 text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all font-medium min-h-[44px]">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
+              <button onClick={handleBulkDelete} className="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-2 btn">
                 {t("admin.deleteAll")}
               </button>
             </div>
@@ -299,83 +284,78 @@ function Admin() {
 
           <div className="flex flex-col gap-2">
             {photos.length > 0 && (
-              <div className="flex items-center gap-3 px-4 py-2 bg-zinc-800/20 border border-zinc-700/30 rounded-xl">
+              <div className="flex items-center gap-3 px-4 py-2 border border-warm/10">
                 <input
                   type="checkbox"
                   checked={selected.length === photos.length && photos.length > 0}
                   onChange={toggleSelectAll}
-                  className="admin-check"
+                  className="ck"
                 />
-                <span className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{t("admin.selectAll")}</span>
-                {selected.length > 0 && (
-                  <span className="text-xs text-amber-400/80 ml-auto">{selected.length} / {photos.length}</span>
-                )}
+                <span className="text-xs text-ink-muted uppercase tracking-wider">{t("admin.selectAll")}</span>
               </div>
             )}
             {photos.map((p, i) => (
-              <div key={p._id} className={`group rounded-xl px-4 py-3.5 flex items-center gap-4 animate-fade-up transition-all duration-200 ${
+              <div key={p._id} className={`px-4 py-3 flex items-center gap-4 border transition-colors ${
                 selected.includes(p._id)
-                  ? "bg-amber-500/5 border border-amber-500/20 shadow-sm shadow-amber-500/5"
+                  ? "bg-warm/5 border-warm/20"
                   : editingId === p._id
-                  ? "bg-zinc-700/50 border border-amber-500/30"
-                  : "bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 hover:border-zinc-600/50"
-              }`} style={{ animationDelay: `${i * 0.05}s` }}>
+                  ? "border-warm/30 bg-warm/5"
+                  : "border-warm/10 hover:border-warm/20"
+              }`}>
                 <input
                   type="checkbox"
                   checked={selected.includes(p._id)}
                   onChange={() => toggleSelect(p._id)}
-                  className="admin-check"
+                  className="ck"
                 />
-                <img src={imageUrl(p)} alt={p.title} loading="lazy" className="w-12 h-12 object-cover rounded-lg shrink-0 ring-1 ring-white/5" />
+                <img src={imageUrl(p)} alt={p.title} loading="lazy" className="w-12 h-12 object-cover shrink-0 rounded-sm" />
                 {editingId === p._id ? (
                   <div className="flex-1 min-w-0 flex flex-col sm:flex-row gap-2">
                     <input
                       value={editTitle}
                       onChange={(e) => setEditTitle(e.target.value)}
-                      className="flex-1 bg-zinc-900/80 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-sm text-zinc-200 focus:outline-none focus:border-amber-500/50"
+                      className="flex-1 border border-warm/20 bg-transparent px-2.5 py-1.5 text-sm text-ink inp"
                     />
                     <select
                       value={editCategory}
                       onChange={(e) => setEditCategory(e.target.value)}
-                      className="text-xs bg-zinc-900/80 border border-zinc-700 rounded-lg px-2 py-1.5 text-zinc-300 focus:outline-none focus:border-amber-500/50 cursor-pointer"
+                      className="text-xs border border-warm/20 bg-transparent px-2 py-1.5 text-ink sel"
                     >
                       {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     </select>
-                    <button onClick={handleEditSave} className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/25 px-3 py-2 rounded-lg cursor-pointer hover:bg-amber-500/25 transition-all font-medium min-h-[44px]">
+                    <button onClick={handleEditSave} className="text-xs bg-warm/10 text-warm-dark border border-warm/20 px-3 py-2 btn">
                       {t("admin.save")}
                     </button>
-                    <button onClick={handleEditCancel} className="text-xs bg-zinc-700/50 text-zinc-400 border border-zinc-600/50 px-3 py-2 rounded-lg cursor-pointer hover:text-white transition-all min-h-[44px]">
+                    <button onClick={handleEditCancel} className="text-xs border border-warm/20 text-ink-muted px-3 py-2 btn hover:text-ink bg-transparent">
                       {t("admin.cancel")}
                     </button>
                   </div>
                 ) : (
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate text-zinc-200">{p.title}</p>
-                    <span className={`inline-block text-[10px] uppercase tracking-wider font-medium mt-0.5 ${
-                      p.category === "Uncategorized" ? "text-zinc-600" : "text-amber-400/70"
-                    }`}>{p.category}</span>
+                    <p className="text-sm text-ink truncate">{p.title}</p>
+                    <span className="text-xs text-ink-muted/60">{p.category}</span>
                   </div>
                 )}
                 <div className="flex items-center gap-2 shrink-0">
-                  <button onClick={() => handleEditStart(p)} className="md:opacity-0 md:group-hover:opacity-100 bg-zinc-700/50 border border-zinc-600/50 text-zinc-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:text-white hover:border-zinc-500 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
+                  <button onClick={() => handleEditStart(p)} className="border border-warm/20 text-ink-muted text-xs px-3 py-2 btn hover:text-ink hover:border-warm/40 bg-transparent">
                     {t("admin.edit")}
                   </button>
-                  <button onClick={() => handleDeletePhoto(p._id)} className="md:opacity-0 md:group-hover:opacity-100 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-2 rounded-lg cursor-pointer hover:bg-red-500/20 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
+                  <button onClick={() => handleDeletePhoto(p._id)} className="border border-red-200 text-red-500 text-xs px-3 py-2 btn hover:bg-red-50 bg-transparent">
                     {t("admin.delete")}
                   </button>
                 </div>
               </div>
             ))}
-            {photos.length === 0 && <p className="text-center py-12 text-zinc-500">{t("admin.noPhotos")}</p>}
+            {photos.length === 0 && <p className="text-center py-12 text-ink-muted">{t("admin.noPhotos")}</p>}
           </div>
           {photoPages > 1 && (
             <div className="flex items-center justify-between mt-4 text-sm">
-              <span className="text-zinc-500 shrink-0 me-2">{photoTotal} total</span>
-              <div className="flex gap-1 overflow-x-auto hide-scrollbar">
+              <span className="text-ink-muted">{photoTotal} total</span>
+              <div className="flex gap-1">
                 <button
                   disabled={photoPage <= 1}
                   onClick={() => fetchPhotos(photoPage - 1)}
-                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 border border-warm/20 text-ink-muted disabled:opacity-30 btn hover:text-ink hover:border-warm/40 bg-transparent disabled:cursor-not-allowed"
                 >
                   {t("admin.prev")}
                 </button>
@@ -383,10 +363,10 @@ function Admin() {
                   <button
                     key={p}
                     onClick={() => fetchPhotos(p)}
-                    className={`px-3 py-1.5 rounded-lg border text-xs cursor-pointer transition-all ${
+                    className={`px-3 py-1.5 border text-xs btn ${
                       p === photoPage
-                        ? "bg-amber-500 text-zinc-900 border-amber-500 font-medium"
-                        : "border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 bg-transparent"
+                        ? "bg-warm text-paper border-warm"
+                        : "border-warm/20 text-ink-muted hover:text-ink hover:border-warm/40 bg-transparent"
                     }`}
                   >
                     {p}
@@ -395,7 +375,7 @@ function Admin() {
                 <button
                   disabled={photoPage >= photoPages}
                   onClick={() => fetchPhotos(photoPage + 1)}
-                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 border border-warm/20 text-ink-muted disabled:opacity-30 btn hover:text-ink hover:border-warm/40 bg-transparent disabled:cursor-not-allowed"
                 >
                   {t("admin.next")}
                 </button>
@@ -411,7 +391,7 @@ function Admin() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="text-sm bg-zinc-800/50 border border-zinc-700/50 rounded-xl px-3 py-2.5 text-zinc-300 focus:outline-none focus:border-amber-500/50 cursor-pointer"
+              className="text-sm border border-warm/20 bg-transparent px-3 py-2.5 text-ink sel"
             >
               <option value="">{t("admin.allStatuses")}</option>
               <option value="pending">{t("admin.pending")}</option>
@@ -420,49 +400,46 @@ function Admin() {
               <option value="cancelled">{t("admin.cancelled")}</option>
             </select>
             {bookings.length > 0 && (
-              <button onClick={exportCSV} className="text-xs text-zinc-400 border border-zinc-700 px-3 py-2 rounded-xl cursor-pointer hover:text-white hover:border-zinc-500 transition-all bg-transparent flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
+              <button onClick={exportCSV} className="text-xs text-ink-muted border border-warm/20 px-3 py-2 btn hover:text-ink hover:border-warm/40 bg-transparent">
                 {t("admin.exportCSV")}
               </button>
             )}
           </div>
-          {bookings.length === 0 && <p className="text-center py-12 text-zinc-500">{t("admin.noBookings")}</p>}
+          {bookings.length === 0 && <p className="text-center py-12 text-ink-muted">{t("admin.noBookings")}</p>}
           {bookings.map((b, i) => (
             <div
               key={b._id}
               onClick={() => setSelectedBooking(b)}
-              className={`bg-zinc-800/50 backdrop-blur-sm border border-zinc-700/50 rounded-xl px-5 py-4 flex items-center gap-4 animate-fade-up cursor-pointer hover:border-zinc-600 transition-all ${
-                b.status === "pending" ? "border-l-2 border-l-amber-500" : ""
+              className={`border px-5 py-4 flex items-center gap-4 cursor-pointer hover:border-warm/20 transition-colors ${
+                b.status === "pending" ? "border-l-2 border-l-warm border-warm/10" : "border-warm/10"
               }`}
-              style={{ animationDelay: `${i * 0.05}s` }}
             >
-              <div className="w-10 h-10 rounded-full bg-amber-400/10 flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-10 h-10 rounded-full bg-warm/10 flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-warm" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </div>
-              <div className="flex-1 text-sm leading-relaxed min-w-0 overflow-hidden">
-                <strong className="truncate block">{b.name}</strong> <span className="text-zinc-500 text-xs">— {b.phone}</span>
-                <br /><span className="text-zinc-400 text-xs inline-block truncate w-full">{b.date}{b.message ? ` · ${b.message.length > 40 ? b.message.slice(0, 40) + "…" : b.message}` : ""}</span>
+              <div className="flex-1 text-sm min-w-0 overflow-hidden">
+                <strong className="truncate block">{b.name}</strong>
+                <span className="text-ink-muted text-xs"> — {b.phone}</span>
+                <br /><span className="text-ink-muted/60 text-xs">{b.date}{b.message ? ` · ${b.message.length > 40 ? b.message.slice(0, 40) + "…" : b.message}` : ""}</span>
               </div>
-              <span className={`text-[10px] uppercase tracking-wider font-medium px-2 py-1 rounded-md shrink-0 ${
-                b.status === "pending" ? "bg-amber-500/10 text-amber-400" :
-                b.status === "confirmed" ? "bg-emerald-500/10 text-emerald-400" :
-                b.status === "completed" ? "bg-blue-500/10 text-blue-400" :
-                "bg-zinc-500/10 text-zinc-400"
+              <span className={`text-[10px] uppercase tracking-wider font-medium px-2 py-1 shrink-0 ${
+                b.status === "pending" ? "bg-warm/10 text-warm-dark" :
+                b.status === "confirmed" ? "bg-emerald-50 text-emerald-600" :
+                b.status === "completed" ? "bg-blue-50 text-blue-600" :
+                "bg-zinc-50 text-zinc-500"
               }`}>{b.status}</span>
             </div>
           ))}
           {bookingPages > 1 && (
             <div className="flex items-center justify-between mt-4 text-sm">
-              <span className="text-zinc-500 shrink-0 me-2">{bookingTotal} total</span>
-              <div className="flex gap-1 overflow-x-auto hide-scrollbar">
+              <span className="text-ink-muted">{bookingTotal} total</span>
+              <div className="flex gap-1">
                 <button
                   disabled={bookingPage <= 1}
                   onClick={() => fetchBookings(bookingPage - 1)}
-                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 border border-warm/20 text-ink-muted disabled:opacity-30 btn hover:text-ink hover:border-warm/40 bg-transparent disabled:cursor-not-allowed"
                 >
                   {t("admin.prev")}
                 </button>
@@ -470,10 +447,10 @@ function Admin() {
                   <button
                     key={p}
                     onClick={() => fetchBookings(p)}
-                    className={`px-3 py-1.5 rounded-lg border text-xs cursor-pointer transition-all ${
+                    className={`px-3 py-1.5 border text-xs cursor-pointer transition-colors ${
                       p === bookingPage
-                        ? "bg-amber-500 text-zinc-900 border-amber-500 font-medium"
-                        : "border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 bg-transparent"
+                        ? "bg-warm text-paper border-warm"
+                        : "border-warm/20 text-ink-muted hover:text-ink hover:border-warm/40 bg-transparent"
                     }`}
                   >
                     {p}
@@ -482,7 +459,7 @@ function Admin() {
                 <button
                   disabled={bookingPage >= bookingPages}
                   onClick={() => fetchBookings(bookingPage + 1)}
-                  className="px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-400 disabled:opacity-30 hover:text-white hover:border-zinc-500 transition-all cursor-pointer bg-transparent disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 border border-warm/20 text-ink-muted disabled:opacity-30 btn hover:text-ink hover:border-warm/40 bg-transparent disabled:cursor-not-allowed"
                 >
                   {t("admin.next")}
                 </button>
@@ -491,27 +468,27 @@ function Admin() {
           )}
 
           {selectedBooking && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fade-in" onClick={() => setSelectedBooking(null)}>
-              <div className="bg-zinc-800 border border-zinc-700 rounded-2xl p-6 max-w-lg w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 animate-fade-in" onClick={() => setSelectedBooking(null)}>
+              <div className="bg-paper border border-warm/10 p-6 max-w-lg w-full shadow-lg" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-bold">{t("admin.bookingDetail")}</h3>
-                  <button onClick={() => setSelectedBooking(null)} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center cursor-pointer">
-                    <svg className="w-4 h-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <h3 className="text-lg font-[family-name:var(--font-display)]">{t("admin.bookingDetail")}</h3>
+                  <button onClick={() => setSelectedBooking(null)} className="w-8 h-8 rounded-full hover:bg-warm/10 flex items-center justify-center cursor-pointer">
+                    <svg className="w-4 h-4 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
                 <div className="space-y-3 text-sm">
-                  <div><span className="text-zinc-500">{t("booking.name")}:</span> <span className="text-white">{selectedBooking.name}</span></div>
-                  <div><span className="text-zinc-500">{t("booking.phone")}:</span> <span className="text-white">{selectedBooking.phone}</span></div>
-                  <div><span className="text-zinc-500">{t("booking.date")}:</span> <span className="text-white">{selectedBooking.date}</span></div>
-                  <div><span className="text-zinc-500">{t("booking.message")}:</span> <span className="text-white">{selectedBooking.message || "—"}</span></div>
+                  <div><span className="text-ink-muted">{t("booking.name")}:</span> <span className="text-ink">{selectedBooking.name}</span></div>
+                  <div><span className="text-ink-muted">{t("booking.phone")}:</span> <span className="text-ink">{selectedBooking.phone}</span></div>
+                  <div><span className="text-ink-muted">{t("booking.date")}:</span> <span className="text-ink">{selectedBooking.date}</span></div>
+                  <div><span className="text-ink-muted">{t("booking.message")}:</span> <span className="text-ink">{selectedBooking.message || "—"}</span></div>
                   <div>
-                    <span className="text-zinc-500">{t("admin.status")}:</span>
+                    <span className="text-ink-muted">{t("admin.status")}:</span>
                     <select
                       value={selectedBooking.status}
                       onChange={(e) => handleStatusChange(selectedBooking._id, e.target.value)}
-                      className="ml-2 text-xs bg-zinc-900/80 border border-zinc-700/60 rounded-lg px-2.5 py-1.5 text-zinc-300 focus:outline-none focus:border-amber-500/50 cursor-pointer"
+                      className="ml-2 text-xs border border-warm/20 bg-transparent px-2.5 py-1.5 text-ink sel"
                     >
                       <option value="pending">{t("admin.pending")}</option>
                       <option value="confirmed">{t("admin.confirmed")}</option>
@@ -521,13 +498,13 @@ function Admin() {
                   </div>
                 </div>
                 <div className="flex gap-2 mt-6">
-                  <button onClick={() => setSelectedBooking(null)} className="flex-1 px-4 py-2.5 rounded-xl border border-zinc-700 text-zinc-400 text-sm cursor-pointer hover:text-white hover:border-zinc-500 transition-all bg-transparent">
+                  <button onClick={() => setSelectedBooking(null)} className="flex-1 px-4 py-2.5 border border-warm/20 text-ink-muted text-sm btn hover:text-ink hover:border-warm/40 bg-transparent">
                     {t("admin.cancel")}
                   </button>
                   <button onClick={() => {
                     handleDeleteBooking(selectedBooking._id);
                     setSelectedBooking(null);
-                  }} className="flex-1 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm cursor-pointer hover:bg-red-500/20 transition-all">
+                  }} className="flex-1 px-4 py-2.5 border border-red-200 text-red-500 text-sm btn hover:bg-red-50 bg-transparent">
                     {t("admin.delete")}
                   </button>
                 </div>
