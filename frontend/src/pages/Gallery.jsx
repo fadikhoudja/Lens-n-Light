@@ -138,7 +138,7 @@ function Gallery() {
           ) : (
             <div ref={gridRef} className="photo-grid columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
               {filtered.map((photo, i) => (
-                <div key={photo.id} onClick={() => setLightboxPhoto(photo)} className="break-inside-avoid">
+                <div key={photo._id} onClick={() => setLightboxPhoto(photo)} className="break-inside-avoid">
                   <PhotoCard photo={photo} index={i} />
                 </div>
               ))}

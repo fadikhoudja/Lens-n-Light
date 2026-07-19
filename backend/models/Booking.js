@@ -15,15 +15,6 @@ const bookingSchema = new mongoose.Schema({
   status: { type: String, enum: ["pending", "confirmed", "completed", "cancelled"], default: "pending" },
 }, { timestamps: true });
 
-bookingSchema.set("toJSON", {
-  transform: (_doc, ret) => {
-    ret.id = ret._id.toString();
-    delete ret._id;
-    delete ret.__v;
-    return ret;
-  },
-});
-
 bookingSchema.index({ createdAt: -1 });
 bookingSchema.index({ status: 1 });
 

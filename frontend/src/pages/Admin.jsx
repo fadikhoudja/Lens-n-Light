@@ -88,7 +88,7 @@ function Admin() {
   useEffect(() => { fetchBookings(); }, [statusFilter]);
 
   const handleEditStart = (photo) => {
-    setEditingId(photo.id);
+    setEditingId(photo._id);
     setEditTitle(photo.title);
     setEditCategory(photo.category);
   };
@@ -117,7 +117,7 @@ function Admin() {
     if (selected.length === photos.length) {
       setSelected([]);
     } else {
-      setSelected(photos.map((p) => p.id));
+      setSelected(photos.map((p) => p._id));
     }
   };
 
@@ -188,7 +188,7 @@ function Admin() {
       await updateBooking(id, { status });
       addToast(t("admin.bookingStatusUpdated").replace("{status}", status), "success");
       fetchBookings();
-      if (selectedBooking?.id === id) {
+      if (selectedBooking?._id === id) {
         setSelectedBooking({ ...selectedBooking, status });
       }
     } catch (err) {
@@ -297,21 +297,21 @@ function Admin() {
               </div>
             )}
             {photos.map((p, i) => (
-              <div key={p.id} className={`px-4 py-3 flex items-center gap-4 border transition-colors ${
-                selected.includes(p.id)
+              <div key={p._id} className={`px-4 py-3 flex items-center gap-4 border transition-colors ${
+                selected.includes(p._id)
                   ? "bg-warm/5 border-warm/20"
-                  : editingId === p.id
+                  : editingId === p._id
                   ? "border-warm/30 bg-warm/5"
                   : "border-warm/10 hover:border-warm/20"
               }`}>
                 <input
                   type="checkbox"
-                  checked={selected.includes(p.id)}
-                  onChange={() => toggleSelect(p.id)}
+                  checked={selected.includes(p._id)}
+                  onChange={() => toggleSelect(p._id)}
                   className="ck"
                 />
                 <img src={imageUrl(p)} alt={p.title} loading="lazy" className="w-12 h-12 object-cover shrink-0 rounded-sm" />
-                {editingId === p.id ? (
+                {editingId === p._id ? (
                   <div className="flex-1 min-w-0 flex flex-col sm:flex-row gap-2">
                     <input
                       value={editTitle}
@@ -342,7 +342,7 @@ function Admin() {
                   <button onClick={() => handleEditStart(p)} className="border border-warm/20 text-ink-muted text-xs px-3 py-2 btn hover:text-ink hover:border-warm/40 bg-transparent">
                     {t("admin.edit")}
                   </button>
-                  <button onClick={() => handleDeletePhoto(p.id)} className="border border-red-200 text-red-500 text-xs px-3 py-2 btn hover:bg-red-50 bg-transparent">
+                  <button onClick={() => handleDeletePhoto(p._id)} className="border border-red-200 text-red-500 text-xs px-3 py-2 btn hover:bg-red-50 bg-transparent">
                     {t("admin.delete")}
                   </button>
                 </div>
@@ -410,7 +410,7 @@ function Admin() {
           {bookings.length === 0 && <p className="text-center py-12 text-ink-muted">{t("admin.noBookings")}</p>}
           {bookings.map((b, i) => (
             <div
-              key={b.id}
+              key={b._id}
               onClick={() => setSelectedBooking(b)}
               className={`border px-5 py-4 flex items-center gap-4 cursor-pointer hover:border-warm/20 transition-colors ${
                 b.status === "pending" ? "border-l-2 border-l-warm border-warm/10" : "border-warm/10"
@@ -489,7 +489,7 @@ function Admin() {
                     <span className="text-ink-muted">{t("admin.status")}:</span>
                     <select
                       value={selectedBooking.status}
-                      onChange={(e) => handleStatusChange(selectedBooking.id, e.target.value)}
+                      onChange={(e) => handleStatusChange(selectedBooking._id, e.target.value)}
                       className="ml-2 text-xs border border-warm/20 bg-transparent px-2.5 py-1.5 text-ink sel"
                     >
                       <option value="pending">{t("admin.pending")}</option>
@@ -504,7 +504,7 @@ function Admin() {
                     {t("admin.cancel")}
                   </button>
                   <button onClick={() => {
-                    handleDeleteBooking(selectedBooking.id);
+                    handleDeleteBooking(selectedBooking._id);
                     setSelectedBooking(null);
                   }} className="flex-1 px-4 py-2.5 border border-red-200 text-red-500 text-sm btn hover:bg-red-50 bg-transparent">
                     {t("admin.delete")}

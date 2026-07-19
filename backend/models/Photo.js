@@ -7,15 +7,6 @@ const photoSchema = new mongoose.Schema({
   category: { type: String, default: "Uncategorized", index: true },
 }, { timestamps: true });
 
-photoSchema.set("toJSON", {
-  transform: (_doc, ret) => {
-    ret.id = ret._id.toString();
-    delete ret._id;
-    delete ret.__v;
-    return ret;
-  },
-});
-
 photoSchema.index({ createdAt: -1 });
 photoSchema.index({ title: "text" });
 
