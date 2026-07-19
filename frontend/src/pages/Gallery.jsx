@@ -64,6 +64,8 @@ function Gallery() {
   const filtered = filter === "All" ? photos : photos.filter((p) => p.category === filter);
 
   const heroReveal = useReveal();
+  const consentReveal = useReveal();
+  const headerReveal = useReveal();
 
   if (loading) return <GallerySkeleton />;
 
@@ -103,10 +105,10 @@ function Gallery() {
 
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-12 p-4 rounded-lg bg-warm/5 border border-warm/10 text-center reveal" ref={useReveal()}>
+          <div className="mb-12 p-4 rounded-lg bg-warm/5 border border-warm/10 text-center reveal" ref={consentReveal}>
             <p className="text-ink-muted text-sm">{t("gallery.consent")}</p>
           </div>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-10 reveal" ref={useReveal()}>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-10 reveal" ref={headerReveal}>
             <div>
               <h2 className="text-3xl md:text-4xl font-[family-name:var(--font-display)]">{t("gallery.title")}</h2>
               <p className="text-ink-muted text-sm mt-1">{t("gallery.subtitle")}</p>
