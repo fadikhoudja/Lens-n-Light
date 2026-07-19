@@ -29,15 +29,15 @@ function Login() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm animate-fade-in-up">
         <div className="text-center mb-8">
-          <div className="w-10 h-10 rounded-full bg-warm flex items-center justify-center mx-auto mb-3">
-            <svg className="w-5 h-5 text-paper" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="w-12 h-12 rounded-full bg-warm/10 border border-warm/20 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-5 h-5 text-warm" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
           </div>
           <h1 className="text-xl font-[family-name:var(--font-display)]">{t("login.title")}</h1>
           <p className="text-ink-muted text-sm mt-1">{t("login.subtitle")}</p>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 border border-warm/10 p-6 rounded-sm">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-8 polaroid">
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-2.5 text-center animate-fade-in">
               {error}

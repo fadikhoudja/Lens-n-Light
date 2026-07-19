@@ -17,6 +17,7 @@ function Booking() {
         <p className="text-ink-muted max-w-sm mx-auto">
           {t("booking.subtitle")}
         </p>
+        <div className="divider mt-8 max-w-xs mx-auto"><span>&#9670;</span></div>
       </div>
       <BookingForm />
     </div>

@@ -73,14 +73,19 @@ function PhotoUpload({ onUpload }) {
   };
 
   return (
-    <div className="border border-warm/10 p-6 mb-6">
+    <div className="p-6 mb-6 polaroid">
       <h2 className="text-base font-[family-name:var(--font-display)] mb-4">{t("admin.uploadTitle")}</h2>
 
       <div
         onClick={() => inputRef.current?.click()}
-        className="border-2 border-dashed border-warm/20 hover:border-warm/50 p-8 text-center cursor-pointer transition-all duration-300"
+        className="border-2 border-dashed border-warm/20 hover:border-warm/50 p-10 text-center cursor-pointer transition-all duration-300 group"
       >
-        <p className="text-ink-muted text-sm">{t("admin.dropText")}</p>
+        <div className="w-10 h-10 rounded-full bg-warm/5 border border-warm/20 flex items-center justify-center mx-auto mb-3 group-hover:bg-warm/10 transition-colors">
+          <svg className="w-5 h-5 text-warm/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+        </div>
+        <p className="text-ink-muted text-sm font-[family-name:var(--font-display)] italic">{t("admin.dropText")}</p>
         <p className="text-ink-muted/50 text-xs mt-1">{t("admin.dropHint")}</p>
         <input ref={inputRef} type="file" multiple accept="image/*" onChange={handleSelect} className="hidden" />
       </div>
@@ -99,10 +104,10 @@ function PhotoUpload({ onUpload }) {
               ))}
             </select>
           </div>
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-3 mb-4">
             {files.map((f, i) => (
-              <div key={i} className="relative w-16 h-16 overflow-hidden border border-warm/10">
-                <img src={URL.createObjectURL(f)} alt="" className="w-full h-full object-cover" />
+              <div key={i} className="w-16 bg-white shadow-sm p-0.5 pb-3" style={{ transform: `rotate(${i % 2 === 0 ? "-1" : "1"}deg)` }}>
+                <img src={URL.createObjectURL(f)} alt="" className="w-full aspect-square object-cover" />
               </div>
             ))}
           </div>

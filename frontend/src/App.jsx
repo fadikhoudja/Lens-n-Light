@@ -5,6 +5,7 @@ import { ToastProvider } from "./components/Toast";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const Gallery = lazy(() => import("./pages/Gallery"));
 const Booking = lazy(() => import("./pages/Booking"));
@@ -43,6 +44,7 @@ function PageLayout({ children }) {
     <>
       <Navbar />
       <PageTransition>{children}</PageTransition>
+      <Footer />
     </>
   );
 }

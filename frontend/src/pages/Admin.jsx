@@ -223,6 +223,8 @@ function Admin() {
         </button>
       </div>
 
+      <div className="divider mb-8"><span>&#9670;</span></div>
+
       <div className="flex gap-1 mb-8 border-b border-warm/10">
         <button
           onClick={() => setActiveTab("photos")}

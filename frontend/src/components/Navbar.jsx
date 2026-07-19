@@ -17,20 +17,28 @@ function Navbar() {
   }, []);
 
   const linkClass = (path) =>
-    `text-sm transition-all duration-200 ${
+    `text-sm transition-all duration-200 relative ${
       pathname === path ? "text-ink font-medium" : "text-ink-muted hover:text-ink"
     }`;
 
   const closeMenu = () => setMenuOpen(false);
 
+  const linkClassWithIndicator = (path, label) => (
+    <Link to={path} className={`${linkClass(path)} py-2 group`} onClick={closeMenu}>
+      {label}
+      {pathname === path && (
+        <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-warm scale-x-100 transition-transform duration-300 hidden md:block" />
+      )}
+      {pathname !== path && (
+        <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-warm scale-x-0 group-hover:scale-x-100 transition-transform duration-300 hidden md:block" />
+      )}
+    </Link>
+  );
+
   const links = (
     <>
-      <Link to="/" className={`${linkClass("/")} py-2`} onClick={closeMenu}>
-        {t("nav.gallery")}
-      </Link>
-      <Link to="/book" className={`${linkClass("/book")} py-2`} onClick={closeMenu}>
-        {t("nav.book")}
-      </Link>
+      {linkClassWithIndicator("/", t("nav.gallery"))}
+      {linkClassWithIndicator("/book", t("nav.book"))}
     </>
   );
 
