@@ -2,13 +2,11 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
 const Photo = require("../models/Photo");
 const auth = require("../middleware/auth");
 const { categorizeImage } = require("../services/ai");
 const { resizeBuffer } = require("../services/resize");
-const { uploadBuffer, destroyImage } = require("../config/cloudinary");
+const { store, destroy } = require("../services/storage");
 
 const ALLOWED_MIMES = ["image/jpeg", "image/png", "image/webp", "image/avif", "image/tiff"];
 
@@ -69,8 +67,9 @@ router.post("/", auth, uploadLimiter, upload.array("images", 20), async (req, re
     for (const file of req.files) {
       const resized = await resizeBuffer(file.buffer);
 
-      const cloudResult = await uploadBuffer(resized);
-      uploaded.push(cloudResult.public_id);
+      const ext = file.originalname.split(".").pop() || "jpg";
+      const result = await store(resized, ext);
+      if (result.public_id) uploaded.push(result.public_id);
 
       const title = sanitize(
         file.originalname.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ")
@@ -85,8 +84,8 @@ router.post("/", auth, uploadLimiter, upload.array("images", 20), async (req, re
 
       const photo = await Photo.create({
         title,
-        image: cloudResult.secure_url,
-        public_id: cloudResult.public_id,
+        image: result.secure_url,
+        public_id: result.public_id,
         category,
       });
       results.push(photo);
@@ -95,7 +94,7 @@ router.post("/", auth, uploadLimiter, upload.array("images", 20), async (req, re
     res.status(201).json(results);
   } catch (err) {
     for (const pid of uploaded) {
-      destroyImage(pid).catch((e) => console.error("Cleanup failed for", pid, e.message));
+      destroy({ public_id: pid }).catch((e) => console.error("Cleanup failed for", pid, e.message));
     }
     console.error("POST /api/photos error:", err); res.status(400).json({ error: "Upload failed" });
   }
@@ -121,10 +120,7 @@ router.delete("/:id", auth, async (req, res) => {
     if (!photo) return res.status(404).json({ error: "Photo not found" });
 
     if (photo.public_id) {
-      try { await destroyImage(photo.public_id); } catch (e) { console.error("Cloudinary delete failed:", e.message); }
-    } else {
-      const filePath = path.join(__dirname, "..", "uploads", path.basename(photo.image));
-      try { await fs.promises.unlink(filePath); } catch (e) { if (e.code !== "ENOENT") console.error("Failed to delete file:", filePath, e.message); }
+      destroy(photo);
     }
 
     await Photo.findByIdAndDelete(req.params.id);
@@ -158,13 +154,8 @@ router.delete("/bulk/delete", auth, async (req, res) => {
       return res.status(400).json({ error: "Valid ids array (1-100) required" });
     }
     const photos = await Photo.find({ _id: { $in: ids } });
-    const results = await Promise.allSettled(photos.map(async (photo) => {
-      if (photo.public_id) {
-        await destroyImage(photo.public_id);
-      } else {
-        const filePath = path.join(__dirname, "..", "uploads", path.basename(photo.image));
-        await fs.promises.unlink(filePath);
-      }
+    const results = await Promise.allSettled(photos.map((photo) => {
+      try { destroy(photo); } catch {}
     }));
     for (const r of results) {
       if (r.status === "rejected") console.error("Bulk delete cleanup error:", r.reason);
