@@ -19,7 +19,7 @@ function PhotoCard({ photo, index = 0 }) {
     >
       {imgError ? (
         <div className="w-full aspect-[4/3] bg-warm/5 flex items-center justify-center animate-fade-in">
-          <span className="text-ink-muted/40 text-sm font-[family-name:var(--font-display)] italic">{photo.title}</span>
+          <span className="text-ink-muted/40 text-xs font-[family-name:var(--font-display)] italic">—</span>
         </div>
       ) : (
         <div className="relative overflow-hidden bg-warm/5">
@@ -41,12 +41,11 @@ function PhotoCard({ photo, index = 0 }) {
           />
         </div>
       )}
-      <div className="px-1 pt-2.5 flex items-start justify-between gap-2">
-        <h3 className="text-xs text-ink font-[family-name:var(--font-display)] italic leading-tight">{photo.title}</h3>
-        {photo.category && (
-          <span className="stamp shrink-0 mt-0.5">{photo.category}</span>
-        )}
-      </div>
+      {photo.category && (
+        <div className="px-1 pt-2.5 flex justify-end">
+          <span className="stamp">{photo.category}</span>
+        </div>
+      )}
     </div>
   );
 }
